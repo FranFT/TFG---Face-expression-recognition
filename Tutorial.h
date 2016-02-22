@@ -1,3 +1,6 @@
+#ifndef __TUTORIAL_CANNY__
+#define __TUTORIAL_CANNY__
+
 #include "utilidades.h"
 
 //// Detección de características
@@ -9,3 +12,5 @@ Mat CannyThreshold(const Mat& img, double low_threshold, int kernel_size = 3, in
 
 // Ejecuta un pequeño ejemplo de uso del detector de Canny.
 void tutorial();
+
+#endif
