@@ -4,6 +4,10 @@ Mat leeimagen(char* filename, int flagColor){
 	return imread(filename, flagColor);
 }
 
+Mat leeimagen(String filename, int flagColor){
+	return imread(filename, flagColor);
+}
+
 void pintaI(const Mat& im, char* nombre_ventana){
 	if (!im.empty()){
 		Mat im_copia = Mat(im);

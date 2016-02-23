@@ -21,6 +21,16 @@ using namespace std;
 Mat leeimagen(char* filename, int flagColor = 0);
 
 /**
+*	@fn Mat leeimagen(String filename, int flagColor = 0)
+*	@brief Lee una imagen.
+*	@param[in] filename Path necesario para leer la imagen.
+*	@param[in] flagColor Si es 0 la almacena en escala de grises (1 canal).
+*						 Si es 1 la almacena en color (3 canales).
+*	@returns La imagen se almacena en un objeto de tipo Mat y se devuelve.
+*/
+Mat leeimagen(String filename, int flagColor = 0);
+
+/**
 *	@fn pintaI(const Mat& im, char* nombre_ventana = "imagen")
 *	@brief Muestra una imagen por pantalla.
 *	@param[in] im Objeto Mat que se desea mostrar.
