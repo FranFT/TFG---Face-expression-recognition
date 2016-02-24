@@ -2,9 +2,11 @@
 #define __CLASS_EXPRESION__
 
 #include <time.h>
+#include <fstream>
 #include "utilidades.h"
 
 #define NUM_SUJETOS 15
+#define NUM_EXPRESIONES 11
 
 enum tipo_expresion{
 	centerlight,
@@ -33,12 +35,18 @@ private:
 	String formato;
 
 	String tipo_expresion2String(tipo_expresion _tipo);
+	void generar_fichero_background_samples();
+
 public:
 	expresion();
 	expresion(tipo_expresion _tipo, float _size_training = 0.8, String _ruta = "yalefaces/subject", String _formato = ".png");
 	expresion(const expresion& obj);
 	~expresion(){};
+
 	void set_salida_por_pantalla(bool _salida);
+	void print_muestras();
+	void print_tipo_expresion();
+
 	bool cargar_expresion(tipo_expresion _tipo, bool _color = false);
 	bool generar_muestras(float _size_training);
 };

@@ -36,6 +36,22 @@ void expresion::set_salida_por_pantalla(bool _salida){
 	salida = _salida;
 }
 
+void expresion::print_tipo_expresion(){
+	cout << tipo_expresion2String(tipo) << endl;
+}
+
+
+void expresion::print_muestras(){
+	cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) << "%:" << endl;
+	cout << "Training: ";
+	for (int i = 0; i < muestra_training.size(); i++)
+		cout << muestra_training.at(i) << ", ";
+	cout << endl << "Test: ";
+	for (int i = 0; i < muestra_test.size(); i++)
+		cout << muestra_test.at(i) << ", ";
+	cout << endl;
+}
+
 String expresion::tipo_expresion2String(tipo_expresion _tipo){
 	String cadena_salida;
 
@@ -119,6 +135,7 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 	}
 
 	exito = generar_muestras(size_training);
+	generar_fichero_background_samples();
 
 	return exito;
 }
@@ -164,4 +181,26 @@ bool expresion::generar_muestras(float _size_training){
 	}
 
 	return true;
+}
+
+void expresion::generar_fichero_background_samples(){
+	ofstream fichero;
+	String nombre_fichero = "bg_" + tipo_expresion2String(tipo) + ".txt";
+	String nombre_muestra;
+	fichero.open(nombre_fichero, ios::out | ios::trunc);
+
+	for (int i = 0; i < NUM_EXPRESIONES; i++){
+		if (i != static_cast<int>(tipo)){
+			for (int j = 1; j <= NUM_SUJETOS; j++){
+				if (j < 10)
+					nombre_muestra = ruta + "0" + to_string(j) + "." + tipo_expresion2String(static_cast<tipo_expresion>(i))+".png";
+				else
+					nombre_muestra = ruta + to_string(j) + "." + tipo_expresion2String(static_cast<tipo_expresion>(i)) + ".png";
+
+				fichero << nombre_muestra << endl;
+			}
+		}
+	}
+
+	fichero.close();
 }

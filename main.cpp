@@ -8,7 +8,7 @@
 
 
 int main(){
-	expresion aux(happy, 0.5);
-	pintaI(Mat::zeros(500, 500, CV_8S));
+	expresion aux(happy);
+
 	return 0;
 }
