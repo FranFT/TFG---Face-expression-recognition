@@ -7,6 +7,7 @@ expresion::expresion(){
 	salida = false;
 	ruta = "yalefaces/subject";
 	formato = ".png";
+	Region_cara = Rect2i(0, 0, 320, 243);
 }
 
 expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, String _formato){
@@ -16,6 +17,7 @@ expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, S
 	salida = false;
 	ruta = _ruta;
 	formato = _formato;
+	Region_cara = Rect2i(0, 0, 320, 243);
 
 	cargar_expresion(tipo, color);
 }
@@ -30,6 +32,7 @@ expresion::expresion(const expresion& obj){
 	salida = obj.salida;
 	ruta = obj.ruta;
 	formato = obj.formato;
+	Region_cara = obj.Region_cara;
 }
 
 void expresion::set_salida_por_pantalla(bool _salida){
@@ -184,23 +187,41 @@ bool expresion::generar_muestras(float _size_training){
 }
 
 void expresion::generar_fichero_background_samples(){
-	ofstream fichero;
-	String nombre_fichero = "bg_" + tipo_expresion2String(tipo) + ".txt";
-	String nombre_muestra;
-	fichero.open(nombre_fichero, ios::out | ios::trunc);
+	ofstream fichero_casos_positivos;
+	ofstream fichero_casos_negativos;
+	String nombre_fichero_casos_positivos;
+	String nombre_fichero_casos_negativos;
 
-	for (int i = 0; i < NUM_EXPRESIONES; i++){
-		if (i != static_cast<int>(tipo)){
-			for (int j = 1; j <= NUM_SUJETOS; j++){
-				if (j < 10)
-					nombre_muestra = ruta + "0" + to_string(j) + "." + tipo_expresion2String(static_cast<tipo_expresion>(i))+".png";
-				else
-					nombre_muestra = ruta + to_string(j) + "." + tipo_expresion2String(static_cast<tipo_expresion>(i)) + ".png";
+	String linea;
 
-				fichero << nombre_muestra << endl;
+	nombre_fichero_casos_positivos = tipo_expresion2String(tipo) + ".txt";
+	nombre_fichero_casos_negativos = "bg_" + tipo_expresion2String(tipo) + ".txt";
+
+	fichero_casos_positivos.open(nombre_fichero_casos_positivos, ios::out | ios::trunc);
+	fichero_casos_negativos.open(nombre_fichero_casos_negativos, ios::out | ios::trunc);
+
+	for (int indice_tipo = 0; indice_tipo < NUM_EXPRESIONES; indice_tipo++){
+		for (int i = 1; i < NUM_SUJETOS; i++){
+			linea = ruta;
+			if (i < 10)
+				linea = linea + "0";
+			linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+			// Si se trata de la expresión para la que se va a entrenar el clasificador:
+			if (indice_tipo == static_cast<int>(tipo)){
+				linea = linea + " 1 " +
+					to_string(Region_cara.x) + " " +
+					to_string(Region_cara.y) + " " +
+					to_string(Region_cara.width) + " " +
+					to_string(Region_cara.height);
+
+				fichero_casos_positivos << linea << endl;
+			}
+			else{
+				fichero_casos_negativos << linea << endl;
 			}
 		}
 	}
 
-	fichero.close();
+	fichero_casos_positivos.close();
+	fichero_casos_negativos.close();
 }

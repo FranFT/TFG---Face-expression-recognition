@@ -27,14 +27,17 @@ private:
 	float size_training;
 	bool color;
 	bool salida;
+	tipo_expresion tipo;
+	Rect2i Region_cara;
+
 	vector<Mat> imagenes;
 	vector<int> muestra_training;
 	vector<int> muestra_test;
-	tipo_expresion tipo;
-	String ruta;
-	String formato;
 
+	String formato;
+	String ruta;
 	String tipo_expresion2String(tipo_expresion _tipo);
+
 	void generar_fichero_background_samples();
 
 public:

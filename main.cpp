@@ -1,5 +1,7 @@
 #include "utilidades.h"
 #include "expresion.h"
+#include <opencv2\objdetect\objdetect.hpp>
+
 
 #define NUM_IMAGES 165
 
