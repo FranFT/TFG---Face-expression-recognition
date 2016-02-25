@@ -3,6 +3,7 @@
 
 #include <time.h>
 #include <fstream>
+#include <opencv2\objdetect\objdetect.hpp>
 #include "utilidades.h"
 
 #define NUM_SUJETOS 15
@@ -28,7 +29,7 @@ private:
 	bool color;
 	bool salida;
 	tipo_expresion tipo;
-	Rect2i Region_cara;
+	Rect2i region_cara;
 
 	vector<Mat> imagenes;
 	vector<int> muestra_training;
@@ -36,9 +37,12 @@ private:
 
 	String formato;
 	String ruta;
-	String tipo_expresion2String(tipo_expresion _tipo);
+	String ruta_clasificador_xml;
+	String clasificador_defecto;
 
+	String tipo_expresion2String(tipo_expresion _tipo);
 	void generar_fichero_background_samples();
+	void optimizar_region_cara(String xml_classifier);
 
 public:
 	expresion();
@@ -47,6 +51,9 @@ public:
 	~expresion(){};
 
 	void set_salida_por_pantalla(bool _salida);
+	void set_ruta_clasificador_xml(String _ruta);
+	void set_clasificador_defecto(String _nombre);
+
 	void print_muestras();
 	void print_tipo_expresion();
 

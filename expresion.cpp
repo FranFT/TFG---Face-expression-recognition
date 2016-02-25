@@ -7,7 +7,9 @@ expresion::expresion(){
 	salida = false;
 	ruta = "yalefaces/subject";
 	formato = ".png";
-	Region_cara = Rect2i(0, 0, 320, 243);
+	region_cara = Rect2i(0, 0, 320, 243);
+	ruta_clasificador_xml = "C:/opencv/sources/data/haarcascades/";
+	clasificador_defecto = "haarcascade_frontalface_alt.xml";
 }
 
 expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, String _formato){
@@ -17,9 +19,13 @@ expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, S
 	salida = false;
 	ruta = _ruta;
 	formato = _formato;
-	Region_cara = Rect2i(0, 0, 320, 243);
+	region_cara = Rect2i(0, 0, 320, 243);
+	ruta_clasificador_xml = "C:/opencv/sources/data/haarcascades/";
+	clasificador_defecto = "haarcascade_frontalface_default.xml";
+
 
 	cargar_expresion(tipo, color);
+	optimizar_region_cara(clasificador_defecto);
 }
 
 expresion::expresion(const expresion& obj){
@@ -32,12 +38,17 @@ expresion::expresion(const expresion& obj){
 	salida = obj.salida;
 	ruta = obj.ruta;
 	formato = obj.formato;
-	Region_cara = obj.Region_cara;
+	region_cara = obj.region_cara;
 }
 
 void expresion::set_salida_por_pantalla(bool _salida){
 	salida = _salida;
 }
+
+void expresion::set_clasificador_defecto(String _nombre){
+	clasificador_defecto = _nombre;
+}
+
 
 void expresion::print_tipo_expresion(){
 	cout << tipo_expresion2String(tipo) << endl;
@@ -209,10 +220,10 @@ void expresion::generar_fichero_background_samples(){
 			// Si se trata de la expresión para la que se va a entrenar el clasificador:
 			if (indice_tipo == static_cast<int>(tipo)){
 				linea = linea + " 1 " +
-					to_string(Region_cara.x) + " " +
-					to_string(Region_cara.y) + " " +
-					to_string(Region_cara.width) + " " +
-					to_string(Region_cara.height);
+					to_string(region_cara.x) + " " +
+					to_string(region_cara.y) + " " +
+					to_string(region_cara.width) + " " +
+					to_string(region_cara.height);
 
 				fichero_casos_positivos << linea << endl;
 			}
@@ -224,4 +235,38 @@ void expresion::generar_fichero_background_samples(){
 
 	fichero_casos_positivos.close();
 	fichero_casos_negativos.close();
+}
+
+// http://docs.opencv.org/master/d7/d8b/tutorial_py_face_detection.html#gsc.tab=0
+void expresion::optimizar_region_cara(String xml_classifier){
+	CascadeClassifier face_cascade;
+	vector<Mat>::const_iterator it;
+	vector<Rect> regiones;
+	Mat aux;
+
+	if (face_cascade.load(ruta_clasificador_xml + xml_classifier)){
+		aux = imagenes.at(0).clone();
+
+		if (aux.type() != CV_8U){
+			cout << "CV_8U" << endl;
+			aux.convertTo(aux, CV_8U);
+		}
+		if (aux.channels() == 3){
+			cout << "Gray" << endl;
+			cvtColor(aux, aux, COLOR_BGR2GRAY);
+		}
+		pintaI(aux);
+
+		
+		face_cascade.detectMultiScale(aux, regiones);
+
+		rectangle(aux, regiones.at(0), Scalar(255, 0, 0));
+		pintaI(aux);
+	}
+	/*for (it = imagenes.begin(); it != imagenes.end(); ++it){
+		aux = (*it).clone();
+		if (aux.channels() == 3)
+			cvtColor(aux, aux, COLOR_BGR2GRAY);
+		face_cascade.detectMultiScale(aux, Region_aux);
+	}*/
 }
