@@ -25,7 +25,6 @@ expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, S
 
 
 	cargar_expresion(tipo, color);
-	optimizar_region_cara(clasificador_defecto);
 }
 
 expresion::expresion(const expresion& obj){
@@ -149,6 +148,7 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 	}
 
 	exito = generar_muestras(size_training);
+	optimizar_region_cara(clasificador_defecto);
 	generar_fichero_background_samples();
 
 	return exito;
@@ -242,31 +242,41 @@ void expresion::optimizar_region_cara(String xml_classifier){
 	CascadeClassifier face_cascade;
 	vector<Mat>::const_iterator it;
 	vector<Rect> regiones;
+	Rect region_provisional = Rect(0, 0, 0, 0);
+	int contador;
 	Mat aux;
 
 	if (face_cascade.load(ruta_clasificador_xml + xml_classifier)){
-		aux = imagenes.at(0).clone();
+		for (contador = 0, it = imagenes.begin(); it != imagenes.end(); ++it, contador++){
+			aux = (*it).clone();
 
-		if (aux.type() != CV_8U){
-			cout << "CV_8U" << endl;
-			aux.convertTo(aux, CV_8U);
+			if (aux.type() != CV_8U){
+				cout << "CV_8U" << endl;
+				aux.convertTo(aux, CV_8U);
+			}
+			if (aux.channels() == 3){
+				cout << "Gray" << endl;
+				cvtColor(aux, aux, COLOR_BGR2GRAY);
+			}
+
+			face_cascade.detectMultiScale(aux, regiones);
+
+			if (!regiones.empty()){
+				region_provisional.x += regiones.at(0).x;
+				region_provisional.width += regiones.at(0).width;
+			}
+
+			regiones.clear();
 		}
-		if (aux.channels() == 3){
-			cout << "Gray" << endl;
-			cvtColor(aux, aux, COLOR_BGR2GRAY);
-		}
-		pintaI(aux);
 
-		
-		face_cascade.detectMultiScale(aux, regiones);
+		region_provisional.x /= contador;
+		region_provisional.width /= contador;
+		region_provisional.height = aux.size().height;
 
-		rectangle(aux, regiones.at(0), Scalar(255, 0, 0));
-		pintaI(aux);
+		region_cara = region_provisional;
+		/*cout << region_cara << endl;
+		cout << region_provisional << endl;
+		rectangle(aux, region_provisional, Scalar(0, 255, 0), 2);
+		pintaI(aux);*/
 	}
-	/*for (it = imagenes.begin(); it != imagenes.end(); ++it){
-		aux = (*it).clone();
-		if (aux.channels() == 3)
-			cvtColor(aux, aux, COLOR_BGR2GRAY);
-		face_cascade.detectMultiScale(aux, Region_aux);
-	}*/
 }
