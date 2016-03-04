@@ -27,19 +27,6 @@ expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, S
 	cargar_expresion(tipo, color);
 }
 
-expresion::expresion(const expresion& obj){
-	imagenes = obj.imagenes;
-	muestra_training = obj.muestra_training;
-	muestra_test = obj.muestra_test;
-	tipo = obj.tipo;
-	size_training = obj.size_training;
-	color = obj.color;
-	salida = obj.salida;
-	ruta = obj.ruta;
-	formato = obj.formato;
-	region_cara = obj.region_cara;
-}
-
 void expresion::set_salida_por_pantalla(bool _salida){
 	salida = _salida;
 }
@@ -48,11 +35,13 @@ void expresion::set_clasificador_defecto(String _nombre){
 	clasificador_defecto = _nombre;
 }
 
+String expresion::get_clasificador_defecto(){
+	return clasificador_defecto;
+}
 
 void expresion::print_tipo_expresion(){
 	cout << tipo_expresion2String(tipo) << endl;
 }
-
 
 void expresion::print_muestras(){
 	cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) << "%:" << endl;
@@ -111,7 +100,6 @@ String expresion::tipo_expresion2String(tipo_expresion _tipo){
 	return cadena_salida;
 }
 
-
 bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 	String _expresion = tipo_expresion2String(_tipo);
 	String ruta_aux;
@@ -122,6 +110,7 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 		imagenes.clear();
 		muestra_training.clear();
 		muestra_test.clear();
+		region_cara = Rect2i(0, 0, 0, 0);
 
 		if (salida)
 			cout << "Limpiando imagenes anteriores..." << endl;
@@ -144,8 +133,9 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 			exito = false;
 		}
 		else if (img_aux.data != NULL & salida)
-			cout << "Leyendo imagen: " << ruta_aux << ", Dimensiones" << img_aux.cols << "-" << img_aux.rows << endl;			
+			cout << "Leyendo imagen: " << ruta_aux << ", Dimensiones" << img_aux.cols << "-" << img_aux.rows << endl;
 	}
+	region_cara = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
 
 	exito = generar_muestras(size_training);
 	optimizar_region_cara(clasificador_defecto);

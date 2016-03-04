@@ -47,12 +47,14 @@ private:
 public:
 	expresion();
 	expresion(tipo_expresion _tipo, float _size_training = 0.8, String _ruta = "yalefaces/subject", String _formato = ".png");
-	expresion(const expresion& obj);
 	~expresion(){};
+
+	expresion& operator=(const expresion& obj);
 
 	void set_salida_por_pantalla(bool _salida);
 	void set_ruta_clasificador_xml(String _ruta);
 	void set_clasificador_defecto(String _nombre);
+	String get_clasificador_defecto();
 
 	void print_muestras();
 	void print_tipo_expresion();
