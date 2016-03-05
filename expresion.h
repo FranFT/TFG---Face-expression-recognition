@@ -8,6 +8,7 @@
 
 #define NUM_SUJETOS 15
 #define NUM_EXPRESIONES 11
+#define SEMILLA_ALEATORIA 12345
 
 enum tipo_expresion{
 	centerlight,
@@ -33,7 +34,7 @@ private:
 
 	vector<Mat> imagenes;
 	vector<int> muestra_training;
-	vector<int> muestra_test;
+	//vector<int> muestra_test;
 	vector<Rect2i> region_cara;
 
 	String formato;

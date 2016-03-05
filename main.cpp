@@ -15,8 +15,10 @@ vector<expresion> inicializar_expresiones(const float _size_training, bool _sali
 			expresiones.push_back(aux);
 		else if (_salida)
 			cerr << "ERROR: No se ha podido cargar la expresion facial - " << static_cast<tipo_expresion>(i) << endl;
-	}
 
+		aux.print_muestras();
+	}
+	pintaI(Mat::zeros(40,40,CV_8S));
 	return expresiones;
 }
 

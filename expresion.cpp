@@ -48,9 +48,6 @@ void expresion::print_muestras(){
 	cout << "Training: ";
 	for (int i = 0; i < muestra_training.size(); i++)
 		cout << muestra_training.at(i) << ", ";
-	cout << endl << "Test: ";
-	for (int i = 0; i < muestra_test.size(); i++)
-		cout << muestra_test.at(i) << ", ";
 	cout << endl;
 }
 
@@ -109,7 +106,6 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 	if (!imagenes.empty()){
 		imagenes.clear();
 		muestra_training.clear();
-		muestra_test.clear();
 		region_cara.clear();
 		region_cara_defecto = Rect2i(0, 0, 0, 0);
 
@@ -155,9 +151,10 @@ bool expresion::generar_muestras(float _size_training){
 	}
 	else{
 		muestra_training.clear();
-		muestra_test.clear();
+		muestra_training = vector<int>(imagenes.size());
 
-		srand(time(NULL));
+		//srand(time(NULL));
+		srand(SEMILLA_ALEATORIA);
 		vector<int> lista_indices;
 
 		size_training = _size_training;
@@ -165,22 +162,19 @@ bool expresion::generar_muestras(float _size_training){
 		for (int i = 0; i < imagenes.size(); i++)
 			lista_indices.push_back(i);
 
-		random_shuffle(lista_indices.begin(), lista_indices.end());
+		random_shuffle(lista_indices.begin(), lista_indices.end());		
 
 		for (int i = 0; i < lista_indices.size(); i++)
 			if (i < ceil(lista_indices.size()*size_training))
-				muestra_training.push_back(lista_indices.at(i));
+				muestra_training.at(lista_indices.at(i)) = 1;
 			else
-				muestra_test.push_back(lista_indices.at(i));
+				muestra_training.at(lista_indices.at(i)) = 0;
 
 		if (salida){
 			cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) <<"%:"<<endl;
 			cout << "Training: ";
 			for (int i = 0; i < muestra_training.size(); i++)
 				cout << muestra_training.at(i) << ", ";
-			cout << endl << "Test: ";
-			for (int i = 0; i < muestra_test.size(); i++)
-				cout << muestra_test.at(i) << ", ";
 			cout << endl;
 		}
 
@@ -231,6 +225,7 @@ void expresion::optimizar_region_cara(String xml_classifier){
 }
 
 void expresion::generar_fichero_background_samples(){
+	vector<int>::iterator it;
 	ofstream fichero_casos_positivos;
 	ofstream fichero_casos_negativos;
 	String nombre_fichero_casos_positivos;
@@ -246,32 +241,35 @@ void expresion::generar_fichero_background_samples(){
 
 	for (int indice_tipo = 0; indice_tipo < NUM_EXPRESIONES; indice_tipo++){
 		for (int i = 1; i < NUM_SUJETOS; i++){
-			linea = ruta;
-			if (i < 10)
-				linea = linea + "0";
-			linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
-			// Si se trata de la expresión para la que se va a entrenar el clasificador:
-			if (indice_tipo == static_cast<int>(tipo)){
-				// Si la región de la cara no está optimizada se usa la región por defecto.
-				if (region_cara.empty()){
-					linea = linea + " 1 " +
-						to_string(region_cara_defecto.x) + " " +
-						to_string(region_cara_defecto.y) + " " +
-						to_string(region_cara_defecto.width) + " " +
-						to_string(region_cara_defecto.height);
+			// Si el sujeto pertenece a la muestra de entrenamiento.
+			if (muestra_training.at(i-1) == 1){
+				linea = ruta;
+				if (i < 10)
+					linea = linea + "0";
+				linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+				// Si se trata de la expresión para la que se va a entrenar el clasificador:
+				if (indice_tipo == static_cast<int>(tipo)){
+					// Si la región de la cara no está optimizada se usa la región por defecto.
+					if (region_cara.empty()){
+						linea = linea + " 1 " +
+							to_string(region_cara_defecto.x) + " " +
+							to_string(region_cara_defecto.y) + " " +
+							to_string(region_cara_defecto.width) + " " +
+							to_string(region_cara_defecto.height);
+					}
+					else{
+						linea = linea + " 1 " +
+							to_string(region_cara.at(i - 1).x) + " " +
+							to_string(region_cara.at(i - 1).y) + " " +
+							to_string(region_cara.at(i - 1).width) + " " +
+							to_string(region_cara.at(i - 1).height);
+					}
+
+					fichero_casos_positivos << linea << endl;
 				}
 				else{
-					linea = linea + " 1 " +
-						to_string(region_cara.at(i - 1).x) + " " +
-						to_string(region_cara.at(i - 1).y) + " " +
-						to_string(region_cara.at(i - 1).width) + " " +
-						to_string(region_cara.at(i - 1).height);
+					fichero_casos_negativos << linea << endl;
 				}
-
-				fichero_casos_positivos << linea << endl;
-			}
-			else{
-				fichero_casos_negativos << linea << endl;
 			}
 		}
 	}
