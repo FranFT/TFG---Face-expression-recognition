@@ -5,9 +5,9 @@ expresion::expresion(){
 	size_training = 0.8;
 	color = false;
 	salida = false;
+	region_cara_defecto = Rect2i(0, 0, 0, 0);
 	ruta = "yalefaces/subject";
 	formato = ".png";
-	region_cara = Rect2i(0, 0, 320, 243);
 	ruta_clasificador_xml = "C:/opencv/sources/data/haarcascades/";
 	clasificador_defecto = "haarcascade_frontalface_alt.xml";
 }
@@ -17,9 +17,9 @@ expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, S
 	(_size_training >= 0.1 && _size_training < 1.0) ? size_training = _size_training : size_training = 0.8;
 	color = false;
 	salida = false;
+	region_cara_defecto = Rect2i(0, 0, 0, 0);
 	ruta = _ruta;
 	formato = _formato;
-	region_cara = Rect2i(0, 0, 320, 243);
 	ruta_clasificador_xml = "C:/opencv/sources/data/haarcascades/";
 	clasificador_defecto = "haarcascade_frontalface_default.xml";
 
@@ -100,7 +100,7 @@ String expresion::tipo_expresion2String(tipo_expresion _tipo){
 	return cadena_salida;
 }
 
-bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
+bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, bool _color){
 	String _expresion = tipo_expresion2String(_tipo);
 	String ruta_aux;
 	Mat img_aux;
@@ -110,7 +110,8 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 		imagenes.clear();
 		muestra_training.clear();
 		muestra_test.clear();
-		region_cara = Rect2i(0, 0, 0, 0);
+		region_cara.clear();
+		region_cara_defecto = Rect2i(0, 0, 0, 0);
 
 		if (salida)
 			cout << "Limpiando imagenes anteriores..." << endl;
@@ -135,10 +136,11 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _color){
 		else if (img_aux.data != NULL & salida)
 			cout << "Leyendo imagen: " << ruta_aux << ", Dimensiones" << img_aux.cols << "-" << img_aux.rows << endl;
 	}
-	region_cara = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
+	region_cara_defecto = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
 
 	exito = generar_muestras(size_training);
-	optimizar_region_cara(clasificador_defecto);
+	if (_optimizar_region)
+		optimizar_region_cara(clasificador_defecto);
 	generar_fichero_background_samples();
 
 	return exito;
@@ -187,52 +189,12 @@ bool expresion::generar_muestras(float _size_training){
 	return true;
 }
 
-void expresion::generar_fichero_background_samples(){
-	ofstream fichero_casos_positivos;
-	ofstream fichero_casos_negativos;
-	String nombre_fichero_casos_positivos;
-	String nombre_fichero_casos_negativos;
-
-	String linea;
-
-	nombre_fichero_casos_positivos = tipo_expresion2String(tipo) + ".txt";
-	nombre_fichero_casos_negativos = "bg_" + tipo_expresion2String(tipo) + ".txt";
-
-	fichero_casos_positivos.open(nombre_fichero_casos_positivos, ios::out | ios::trunc);
-	fichero_casos_negativos.open(nombre_fichero_casos_negativos, ios::out | ios::trunc);
-
-	for (int indice_tipo = 0; indice_tipo < NUM_EXPRESIONES; indice_tipo++){
-		for (int i = 1; i < NUM_SUJETOS; i++){
-			linea = ruta;
-			if (i < 10)
-				linea = linea + "0";
-			linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
-			// Si se trata de la expresión para la que se va a entrenar el clasificador:
-			if (indice_tipo == static_cast<int>(tipo)){
-				linea = linea + " 1 " +
-					to_string(region_cara.x) + " " +
-					to_string(region_cara.y) + " " +
-					to_string(region_cara.width) + " " +
-					to_string(region_cara.height);
-
-				fichero_casos_positivos << linea << endl;
-			}
-			else{
-				fichero_casos_negativos << linea << endl;
-			}
-		}
-	}
-
-	fichero_casos_positivos.close();
-	fichero_casos_negativos.close();
-}
-
 // http://docs.opencv.org/master/d7/d8b/tutorial_py_face_detection.html#gsc.tab=0
 void expresion::optimizar_region_cara(String xml_classifier){
 	CascadeClassifier face_cascade;
 	vector<Mat>::const_iterator it;
 	vector<Rect> regiones;
-	Rect region_provisional = Rect(0, 0, 0, 0);
+	Rect region_provisional = region_cara_defecto;
 	int contador;
 	Mat aux;
 
@@ -252,21 +214,68 @@ void expresion::optimizar_region_cara(String xml_classifier){
 			face_cascade.detectMultiScale(aux, regiones);
 
 			if (!regiones.empty()){
-				region_provisional.x += regiones.at(0).x;
-				region_provisional.width += regiones.at(0).width;
+				region_provisional.x = regiones.at(0).x;
+				region_provisional.width = regiones.at(0).width;
+				region_cara.push_back(region_provisional);
+			}
+			else{
+				region_cara.push_back(region_cara_defecto);
 			}
 
 			regiones.clear();
 		}
-
-		region_provisional.x /= contador;
-		region_provisional.width /= contador;
-		region_provisional.height = aux.size().height;
-
-		region_cara = region_provisional;
-		/*cout << region_cara << endl;
-		cout << region_provisional << endl;
-		rectangle(aux, region_provisional, Scalar(0, 255, 0), 2);
-		pintaI(aux);*/
 	}
+	else if (salida){
+		cerr << "ERROR: No se pudo cargar el clasificador '" << xml_classifier << "'";
+	}
+}
+
+void expresion::generar_fichero_background_samples(){
+	ofstream fichero_casos_positivos;
+	ofstream fichero_casos_negativos;
+	String nombre_fichero_casos_positivos;
+	String nombre_fichero_casos_negativos;
+
+	String linea;
+
+	nombre_fichero_casos_positivos = "samples/positive_samples/" + tipo_expresion2String(tipo) + ".info";
+	nombre_fichero_casos_negativos = "samples/background_samples/bg_" + tipo_expresion2String(tipo) + ".txt";
+
+	fichero_casos_positivos.open(nombre_fichero_casos_positivos, ios::out | ios::trunc);
+	fichero_casos_negativos.open(nombre_fichero_casos_negativos, ios::out | ios::trunc);
+
+	for (int indice_tipo = 0; indice_tipo < NUM_EXPRESIONES; indice_tipo++){
+		for (int i = 1; i < NUM_SUJETOS; i++){
+			linea = ruta;
+			if (i < 10)
+				linea = linea + "0";
+			linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+			// Si se trata de la expresión para la que se va a entrenar el clasificador:
+			if (indice_tipo == static_cast<int>(tipo)){
+				// Si la región de la cara no está optimizada se usa la región por defecto.
+				if (region_cara.empty()){
+					linea = linea + " 1 " +
+						to_string(region_cara_defecto.x) + " " +
+						to_string(region_cara_defecto.y) + " " +
+						to_string(region_cara_defecto.width) + " " +
+						to_string(region_cara_defecto.height);
+				}
+				else{
+					linea = linea + " 1 " +
+						to_string(region_cara.at(i - 1).x) + " " +
+						to_string(region_cara.at(i - 1).y) + " " +
+						to_string(region_cara.at(i - 1).width) + " " +
+						to_string(region_cara.at(i - 1).height);
+				}
+
+				fichero_casos_positivos << linea << endl;
+			}
+			else{
+				fichero_casos_negativos << linea << endl;
+			}
+		}
+	}
+
+	fichero_casos_positivos.close();
+	fichero_casos_negativos.close();
 }

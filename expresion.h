@@ -29,11 +29,12 @@ private:
 	bool color;
 	bool salida;
 	tipo_expresion tipo;
-	Rect2i region_cara;
+	Rect2i region_cara_defecto;
 
 	vector<Mat> imagenes;
 	vector<int> muestra_training;
 	vector<int> muestra_test;
+	vector<Rect2i> region_cara;
 
 	String formato;
 	String ruta;
@@ -59,7 +60,7 @@ public:
 	void print_muestras();
 	void print_tipo_expresion();
 
-	bool cargar_expresion(tipo_expresion _tipo, bool _color = false);
+	bool cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, bool _color = false);
 	bool generar_muestras(float _size_training);
 };
 
