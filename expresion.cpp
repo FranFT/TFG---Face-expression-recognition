@@ -125,6 +125,10 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 		img_aux = leeimagen(ruta_aux, color).clone();
 		imagenes.push_back(img_aux);
 
+		if (i==1)
+			region_cara_defecto = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
+
+
 		if (img_aux.data == NULL && salida){
 			cerr << "Error leyendo imagen correspondiente al sujeto " << i << endl;
 			exito = false;
@@ -132,7 +136,6 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 		else if (img_aux.data != NULL & salida)
 			cout << "Leyendo imagen: " << ruta_aux << ", Dimensiones" << img_aux.cols << "-" << img_aux.rows << endl;
 	}
-	region_cara_defecto = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
 
 	exito = generar_muestras(size_training);
 	if (_optimizar_region)

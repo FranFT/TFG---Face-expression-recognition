@@ -1,3 +1,6 @@
+#include <Windows.h>
+#include <stdio.h>
+#include <tchar.h>
 #include "utilidades.h"
 #include "expresion.h"
 //#include <opencv2\objdetect\objdetect.hpp>
@@ -20,26 +23,35 @@ vector<expresion> inicializar_expresiones(const float _size_training, bool _sali
 	return expresiones;
 }
 
-/*void create_samples(){
+void create_samples(){
 	PROCESS_INFORMATION informacion_proceso;
 	STARTUPINFO informacion_arranque;
-	LPCTSTR lpApplicationName = "cmd.exe";
-	LPTSTR lpCommandLine = "C:\\Users\\Fran\\Documents\\Visual Studio 2013\\Projects\\TFG - Face recognition\\createsamples.bat";
+	LPCTSTR lpApplicationName = "C:\\Windows\\System32\\cmd.exe";
+	LPTSTR lpCommandLine = "/c createsamples.bat";
 
 	ZeroMemory(&informacion_arranque, sizeof(informacion_arranque));
 	informacion_arranque.cb = sizeof(informacion_arranque);
 	ZeroMemory(&informacion_proceso, sizeof(informacion_proceso));
 
-
-	if (!CreateProcess(lpApplicationName, lpCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &informacion_arranque, &informacion_proceso)){
-		cerr << "ERROR" << endl;
+	//https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx
+	//https://msdn.microsoft.com/en-us/library/ms682512(VS.85).aspx
+	// Iniciamos el proceso que crea los ficheros .vec
+	if (!CreateProcess(lpApplicationName, lpCommandLine, NULL, NULL, TRUE, 0, NULL, NULL, &informacion_arranque, &informacion_proceso)){
+		cerr << "ERROR: No se pudo iniciar el proceso - opencv_createsamples.exe" << endl;
 	}
-}*/
+	// Esperamos hasta que el proceso creado finalice.
+	WaitForSingleObject(informacion_proceso.hProcess, INFINITE);
+
+	// Se cierra el proceso.
+	CloseHandle(informacion_proceso.hProcess);
+	CloseHandle(informacion_proceso.hThread);
+}
 
 int main(){
 	const float size_training = 0.8;
 
 	inicializar_expresiones(size_training);
+	create_samples();
 	
 	return 0;
 }
