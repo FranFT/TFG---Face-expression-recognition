@@ -243,7 +243,7 @@ void expresion::generar_fichero_background_samples(){
 		for (int i = 1; i < NUM_SUJETOS; i++){
 			// Si el sujeto pertenece a la muestra de entrenamiento.
 			if (muestra_training.at(i-1) == 1){
-				linea = ruta;
+				linea = "..\\..\\yalefaces\\subject";
 				if (i < 10)
 					linea = linea + "0";
 				linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
