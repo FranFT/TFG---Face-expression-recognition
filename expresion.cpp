@@ -140,7 +140,7 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 	exito = generar_muestras(size_training);
 	if (_optimizar_region)
 		optimizar_region_cara(clasificador_defecto);
-	generar_fichero_background_samples();
+	generar_fichero_entrenamiento();
 
 	return exito;
 }
@@ -227,7 +227,7 @@ void expresion::optimizar_region_cara(String xml_classifier){
 	}
 }
 
-void expresion::generar_fichero_background_samples(){
+void expresion::generar_fichero_entrenamiento(){
 	vector<int>::iterator it;
 	ofstream fichero_casos_positivos;
 	ofstream fichero_casos_negativos;
@@ -242,16 +242,21 @@ void expresion::generar_fichero_background_samples(){
 	fichero_casos_positivos.open(nombre_fichero_casos_positivos, ios::out | ios::trunc);
 	fichero_casos_negativos.open(nombre_fichero_casos_negativos, ios::out | ios::trunc);
 
+
 	for (int indice_tipo = 0; indice_tipo < NUM_EXPRESIONES; indice_tipo++){
 		for (int i = 1; i < NUM_SUJETOS; i++){
 			// Si el sujeto pertenece a la muestra de entrenamiento.
-			if (muestra_training.at(i-1) == 1){
-				linea = "..\\..\\yalefaces\\subject";
-				if (i < 10)
-					linea = linea + "0";
-				linea = linea + to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+			if (muestra_training.at(i - 1) == 1){
 				// Si se trata de la expresión para la que se va a entrenar el clasificador:
 				if (indice_tipo == static_cast<int>(tipo)){
+					////
+					// Fichero casos positivos:
+					//
+					// Se prepara la linea que se va a incluir en el fichero de casos positivos.
+					String linea = "..\\..\\yalefaces\\subject";
+					if (i < 10)	linea += "0";
+					linea += to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+
 					// Si la región de la cara no está optimizada se usa la región por defecto.
 					if (region_cara.empty()){
 						linea = linea + " 1 " +
@@ -261,16 +266,26 @@ void expresion::generar_fichero_background_samples(){
 							to_string(region_cara_defecto.height);
 					}
 					else{
-						linea = linea + " 1 " +
+							linea = linea + " 1 " +
 							to_string(region_cara.at(i - 1).x) + " " +
 							to_string(region_cara.at(i - 1).y) + " " +
 							to_string(region_cara.at(i - 1).width) + " " +
 							to_string(region_cara.at(i - 1).height);
 					}
 
+					// Se escribe la linea en el fichero correspondiente.
 					fichero_casos_positivos << linea << endl;
 				}
 				else{
+					////
+					// Fichero casos negativos:
+					//
+					// Se prepara la linea que se va a incluir en el fichero de casos negativos.
+					String linea = "yalefaces\\subject";
+					if (i < 10)	linea += "0";
+					linea += to_string(i) + "." + tipo_expresion2String(static_cast<tipo_expresion>(indice_tipo)) + formato;
+
+					// Se escribe la linea en el fichero correspondiente.
 					fichero_casos_negativos << linea << endl;
 				}
 			}

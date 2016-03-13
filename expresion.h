@@ -43,7 +43,7 @@ private:
 	String clasificador_defecto;
 
 	String tipo_expresion2String(tipo_expresion _tipo);
-	void generar_fichero_background_samples();
+	void generar_fichero_entrenamiento();
 	void optimizar_region_cara(String xml_classifier);
 
 public:

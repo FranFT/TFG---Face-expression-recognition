@@ -3,13 +3,17 @@
 #include <tchar.h>
 #include "utilidades.h"
 #include "expresion.h"
-//#include <opencv2\objdetect\objdetect.hpp>
 
-
-#define NUM_IMAGES 165
-
-
-// Fase de entrenamiento.
+/** Fase de preparación de los datos.
+*	Para cada uno de los tipos de expresión se crea un objeto del tipo 'expresion'. Para cada uno de estos objetos:
+*		-Se leen las imágenes correspondientes a la expresión de la base de datos 'yalefaces'.
+*		-Se asigna cada imagen leida a una muestra de training. El resto serán usadas como muestra de test.
+*		-Se busca la cara existente en cada una de dichas imágenes, con el fin de definir una región que será usada
+*		en la creación de los ficheros necesarios para el entrenamiento del clasificador.
+*		-Por último se crean los ficheros necesarios para realizar el entrenamiento del clasificador:
+*			-Ficheros con la ruta de las imágenes de casos positivos pertenecientes a la muestra de training de dicha expresión.
+*			-Ficheros con la ruta de las imágenes de casos negativos pertenecientes a la muestra de training de dicha expresión.
+*/
 vector<expresion> inicializar_expresiones(const float _size_training, bool _salida=false){
 	vector<expresion> expresiones;
 	expresion aux;
@@ -23,11 +27,21 @@ vector<expresion> inicializar_expresiones(const float _size_training, bool _sali
 	return expresiones;
 }
 
-void create_samples(){
+/**
+*	Esta función ejecuta el fichero .bat indicado como argumento. Se empleará para ejecutar las aplicaciones 'opencv_createsamples.exe' y
+*	'opencv_traincascade.exe'.
+
+*	Esta función crea cada uno de los ficheros .vec necesarios para usar el módulo 'opencv_traincascade.exe' que es el encargado de entrenar al
+*	clasificador.
+*	Para ello invoca un proceso que ejecuta un archivo .bat (script) que ejecuta la aplicación 'opencv_createsamples.exe' incluida en OpenCV con
+*	cada uno de las distintas expresiones faciales, generando de esta manera el correspondiente fichero .vec. Esta aplicación hace uso del fichero
+*	de casos positivos creado en la función "inicializar_expresiones()".
+*/
+void ejecutar_fichero_bat(LPTSTR lpCommandLine){
 	PROCESS_INFORMATION informacion_proceso;
 	STARTUPINFO informacion_arranque;
 	LPCTSTR lpApplicationName = "C:\\Windows\\System32\\cmd.exe";
-	LPTSTR lpCommandLine = "/c createsamples.bat";
+	//LPTSTR lpCommandLine = "/c createsamples.bat";
 
 	ZeroMemory(&informacion_arranque, sizeof(informacion_arranque));
 	informacion_arranque.cb = sizeof(informacion_arranque);
@@ -49,9 +63,11 @@ void create_samples(){
 
 int main(){
 	const float size_training = 0.8;
+	LPTSTR _opencv_createsamples = "/c createsamples.bat";
+	LPTSTR _opencv_traincascade = "/c traincascade.bat";
 
 	inicializar_expresiones(size_training);
-	create_samples();
+	ejecutar_fichero_bat(_opencv_createsamples);
 	
 	return 0;
 }
