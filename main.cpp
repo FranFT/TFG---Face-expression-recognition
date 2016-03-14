@@ -3,7 +3,8 @@
 #include <tchar.h>
 #include "utilidades.h"
 #include "expresion.h"
-
+#include "OpenCVApps.h"
+using namespace std;
 /** Fase de preparación de los datos.
 *	Para cada uno de los tipos de expresión se crea un objeto del tipo 'expresion'. Para cada uno de estos objetos:
 *		-Se leen las imágenes correspondientes a la expresión de la base de datos 'yalefaces'.
@@ -37,7 +38,7 @@ vector<expresion> inicializar_expresiones(const float _size_training, bool _sali
 *	cada uno de las distintas expresiones faciales, generando de esta manera el correspondiente fichero .vec. Esta aplicación hace uso del fichero
 *	de casos positivos creado en la función "inicializar_expresiones()".
 */
-void ejecutar_fichero_bat(LPTSTR lpCommandLine){
+/*void ejecutar_fichero_bat(LPTSTR lpCommandLine){
 	PROCESS_INFORMATION informacion_proceso;
 	STARTUPINFO informacion_arranque;
 	LPCTSTR lpApplicationName = "C:\\Windows\\System32\\cmd.exe";
@@ -59,15 +60,18 @@ void ejecutar_fichero_bat(LPTSTR lpCommandLine){
 	// Se cierra el proceso.
 	CloseHandle(informacion_proceso.hProcess);
 	CloseHandle(informacion_proceso.hThread);
-}
+}*/
 
 int main(){
 	const float size_training = 0.8;
-	LPTSTR _opencv_createsamples = "/c createsamples.bat";
-	LPTSTR _opencv_traincascade = "/c traincascade.bat";
+	OpenCVApps aux;
+	aux.generar_ficheros_bat();
+	pintaI(Mat::zeros(100, 100, CV_8S));
+	//LPTSTR _opencv_createsamples = "/c createsamples.bat";
+	//LPTSTR _opencv_traincascade = "/c traincascade.bat";
 
-	inicializar_expresiones(size_training);
-	ejecutar_fichero_bat(_opencv_createsamples);
-	
+	//inicializar_expresiones(size_training);
+	//ejecutar_fichero_bat(_opencv_createsamples);
+
 	return 0;
 }

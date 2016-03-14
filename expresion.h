@@ -34,7 +34,6 @@ private:
 
 	vector<Mat> imagenes;
 	vector<int> muestra_training;
-	//vector<int> muestra_test;
 	vector<Rect2i> region_cara;
 
 	String formato;
