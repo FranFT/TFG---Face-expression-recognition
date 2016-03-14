@@ -15,8 +15,8 @@ class OpenCVApps{
 private:
 	vector<String> expresiones;
 	String ruta_proyecto;
-	String create_samples;
-	String train_cascade;
+	String nombre_fichero1;
+	String nombre_fichero2;
 	String directorio_clasificador;
 	String directorio_ficheros_info;
 	String directorio_ficheros_background;
@@ -26,12 +26,14 @@ private:
 	String formato_ficheros_background;
 
 	String numero_muestras;
+	String sample_width;
+	String sample_height;
 	String numPos;
 	String numNeg;
 	String numStages;
 	String featureType;
 
-	void ejecutar_fichero_bat(LPTSTR lpCommandLine);
+	void ejecutar_fichero_bat(static TCHAR* lpCommandLine);
 public:
 	OpenCVApps();
 	~OpenCVApps(){};

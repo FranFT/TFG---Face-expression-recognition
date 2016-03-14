@@ -6,8 +6,8 @@ OpenCVApps::OpenCVApps(){
 	char bufferAux[FILENAME_MAX];
 
 	ruta_proyecto = String(_getcwd(bufferAux, sizeof(bufferAux)));
-	create_samples = "createsamples.bat";
-	train_cascade = "traincascade.bat";
+	nombre_fichero1 = "createsamples.bat";
+	nombre_fichero2 = "traincascade.bat";
 	directorio_clasificador = "data\\clasificador";
 	directorio_ficheros_info = "samples\\positive_samples\\";
 	directorio_ficheros_background = "samples\\background_samples\\";
@@ -29,6 +29,8 @@ OpenCVApps::OpenCVApps(){
 	expresiones.push_back("wink");
 
 	numero_muestras = "12";
+	sample_width = "48";
+	sample_height = "48";
 
 	// Parámetros para el entrenamiento.
 	numPos = "11";
@@ -43,14 +45,16 @@ void OpenCVApps::generar_ficheros_bat(){
 	ofstream fichero;
 
 	// En primer lugar se crea el fichero createsamples.bat
-	fichero.open(create_samples, ios::out | ios::trunc);
+	fichero.open(nombre_fichero1, ios::out | ios::trunc);
 	fichero << "cd " + ruta_proyecto << endl;
 
 	base = "CALL opencv_createsamples.exe -info " + directorio_ficheros_info;
 	for (int i = 0; i < expresiones.size(); i++){
 		linea = base + expresiones.at(i) + formato_ficheros_info +
 			" -vec " + directorio_ficheros_vec + expresiones.at(i) + formato_ficheros_vec +
-			" -num " + numero_muestras;
+			" -num " + numero_muestras +
+			" -w " + sample_width +
+			" -h " + sample_height;
 
 		fichero << linea << endl;
 	}
@@ -58,7 +62,7 @@ void OpenCVApps::generar_ficheros_bat(){
 	fichero.close();
 
 	// En segundo lugar se crea el fichero traincascade.bat
-	fichero.open(train_cascade, ios::out | ios::trunc);
+	fichero.open(nombre_fichero2, ios::out | ios::trunc);
 	fichero << "cd " + ruta_proyecto << endl;
 
 	base = "CALL opencv_traincascade.exe -data " + directorio_clasificador;
@@ -69,6 +73,8 @@ void OpenCVApps::generar_ficheros_bat(){
 			" -numPos " + numPos +
 			" -numNeg " + numNeg +
 			" -numStages " + numStages +
+			" -w " + sample_width +
+			" -h " + sample_height +
 			" -featureType " + featureType;
 
 		fichero << linea << endl;
@@ -76,4 +82,46 @@ void OpenCVApps::generar_ficheros_bat(){
 
 	fichero.close();
 }
+
+/**
+*	Esta función ejecuta el fichero .bat indicado como argumento. Se empleará para ejecutar las aplicaciones 'opencv_createsamples.exe' y
+*	'opencv_traincascade.exe'.
+*/
+void OpenCVApps::ejecutar_fichero_bat(static TCHAR* lpCommandLine){
+	PROCESS_INFORMATION informacion_proceso;
+	STARTUPINFO informacion_arranque;
+
+	//LPCTSTR lpApplicationName = "C:\\Windows\\System32\\cmd.exe";
+	static const TCHAR* lpApplicationName = TEXT("C:\\Windows\\System32\\cmd.exe");
+	//LPTSTR lpCommandLine = "/c createsamples.bat";
+
+	ZeroMemory(&informacion_arranque, sizeof(informacion_arranque));
+	informacion_arranque.cb = sizeof(informacion_arranque);
+	ZeroMemory(&informacion_proceso, sizeof(informacion_proceso));
+
+	//https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425(v=vs.85).aspx
+	//https://msdn.microsoft.com/en-us/library/ms682512(VS.85).aspx
+	// Iniciamos el proceso que crea los ficheros .vec
+	if (!CreateProcess(lpApplicationName, lpCommandLine, NULL, NULL, TRUE, 0, NULL, NULL, &informacion_arranque, &informacion_proceso)){
+		cerr << "ERROR: No se pudo iniciar el proceso - opencv_createsamples.exe" << endl;
+	}
+	// Esperamos hasta que el proceso creado finalice.
+	WaitForSingleObject(informacion_proceso.hProcess, INFINITE);
+
+	// Se cierra el proceso.
+	CloseHandle(informacion_proceso.hProcess);
+	CloseHandle(informacion_proceso.hThread);
+}
+
+void OpenCVApps::create_samples(){
+	static TCHAR* lpCommandLine = TEXT("/c createsamples.bat");
+	ejecutar_fichero_bat(lpCommandLine);
+}
+
+void OpenCVApps::train_cascade(){
+	static TCHAR* lpCommandLine = TEXT("/c traincascade.bat");
+	ejecutar_fichero_bat(lpCommandLine);
+
+}
+
 
