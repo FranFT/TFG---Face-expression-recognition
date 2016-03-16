@@ -12,7 +12,7 @@ expresion::expresion(){
 	clasificador_defecto = "haarcascade_frontalface_alt.xml";
 }
 
-expresion::expresion(tipo_expresion _tipo, float _size_training, String _ruta, String _formato){
+expresion::expresion(tipo_expresion _tipo, double _size_training, String _ruta, String _formato){
 	tipo = static_cast<tipo_expresion>(_tipo);
 	(_size_training >= 0.1 && _size_training < 1.0) ? size_training = _size_training : size_training = 0.8;
 	color = false;
@@ -46,7 +46,7 @@ void expresion::print_tipo_expresion(){
 void expresion::print_muestras(){
 	cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) << "%:" << endl;
 	cout << "Training: ";
-	for (int i = 0; i < muestra_training.size(); i++)
+	for (unsigned int i = 0; i < muestra_training.size(); i++)
 		cout << muestra_training.at(i) << ", ";
 	cout << endl;
 }
@@ -129,11 +129,11 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 			region_cara_defecto = Rect2i(0, 0, img_aux.size().width, img_aux.size().height);
 
 
-		if (img_aux.data == NULL && salida){
+		if ((img_aux.data == NULL) && salida){
 			cerr << "Error leyendo imagen correspondiente al sujeto " << i << endl;
 			exito = false;
 		}
-		else if (img_aux.data != NULL & salida)
+		else if ((img_aux.data != NULL) & salida)
 			cout << "Leyendo imagen: " << ruta_aux << ", Dimensiones" << img_aux.cols << "-" << img_aux.rows << endl;
 	}
 
@@ -145,7 +145,7 @@ bool expresion::cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, b
 	return exito;
 }
 
-bool expresion::generar_muestras(float _size_training){
+bool expresion::generar_muestras(double _size_training){
 	
 	if (imagenes.empty()){
 		if (salida)
@@ -162,12 +162,12 @@ bool expresion::generar_muestras(float _size_training){
 
 		size_training = _size_training;
 
-		for (int i = 0; i < imagenes.size(); i++)
+		for (unsigned int i = 0; i < imagenes.size(); i++)
 			lista_indices.push_back(i);
 
 		random_shuffle(lista_indices.begin(), lista_indices.end());		
 
-		for (int i = 0; i < lista_indices.size(); i++)
+		for (unsigned int i = 0; i < lista_indices.size(); i++)
 			if (i < ceil(lista_indices.size()*size_training))
 				muestra_training.at(lista_indices.at(i)) = 1;
 			else
@@ -176,7 +176,7 @@ bool expresion::generar_muestras(float _size_training){
 		if (salida){
 			cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) <<"%:"<<endl;
 			cout << "Training: ";
-			for (int i = 0; i < muestra_training.size(); i++)
+			for (unsigned int i = 0; i < muestra_training.size(); i++)
 				cout << muestra_training.at(i) << ", ";
 			cout << endl;
 		}

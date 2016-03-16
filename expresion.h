@@ -26,7 +26,7 @@ enum tipo_expresion{
 
 class expresion{
 private:
-	float size_training;
+	double size_training;
 	bool color;
 	bool salida;
 	tipo_expresion tipo;
@@ -47,7 +47,7 @@ private:
 
 public:
 	expresion();
-	expresion(tipo_expresion _tipo, float _size_training = 0.8, String _ruta = "yalefaces/subject", String _formato = ".png");
+	expresion(tipo_expresion _tipo, double _size_training = 0.8, String _ruta = "yalefaces/subject", String _formato = ".png");
 	~expresion(){};
 
 	expresion& operator=(const expresion& obj);
@@ -61,7 +61,7 @@ public:
 	void print_tipo_expresion();
 
 	bool cargar_expresion(tipo_expresion _tipo, bool _optimizar_region, bool _color = false);
-	bool generar_muestras(float _size_training);
+	bool generar_muestras(double _size_training);
 };
 
 #endif

@@ -35,7 +35,7 @@ OpenCVApps::OpenCVApps(){
 	// Parámetros para el entrenamiento.
 	numPos = "11";
 	numNeg = "120";
-	numStages = "2";
+	numStages = "5";
 	featureType = "LBP";
 }
 
@@ -49,7 +49,7 @@ void OpenCVApps::generar_ficheros_bat(){
 	fichero << "cd " + ruta_proyecto << endl;
 
 	base = "CALL opencv_createsamples.exe -info " + directorio_ficheros_info;
-	for (int i = 0; i < expresiones.size(); i++){
+	for (unsigned int i = 0; i < expresiones.size(); i++){
 		linea = base + expresiones.at(i) + formato_ficheros_info +
 			" -vec " + directorio_ficheros_vec + expresiones.at(i) + formato_ficheros_vec +
 			" -num " + numero_muestras +
@@ -66,10 +66,10 @@ void OpenCVApps::generar_ficheros_bat(){
 	fichero << "cd " + ruta_proyecto << endl;
 
 	base = "CALL opencv_traincascade.exe -data " + directorio_clasificador;
-	for (int i = 0; i < expresiones.size(); i++){
+	for (unsigned int i = 0; i < expresiones.size(); i++){
 		linea = base + "_" + expresiones.at(i) +
 			" -vec " + directorio_ficheros_vec + expresiones.at(i) + formato_ficheros_vec +
-			" -bg " + directorio_ficheros_background + expresiones.at(i) + formato_ficheros_background +
+			" -bg " + directorio_ficheros_background + "bg_" + expresiones.at(i) + formato_ficheros_background +
 			" -numPos " + numPos +
 			" -numNeg " + numNeg +
 			" -numStages " + numStages +
