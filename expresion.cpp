@@ -39,10 +39,6 @@ String expresion::get_clasificador_defecto(){
 	return clasificador_defecto;
 }
 
-void expresion::print_tipo_expresion(){
-	cout << tipo_expresion2String(tipo) << endl;
-}
-
 void expresion::print_muestras(){
 	cout << "Training: " << size_training * 100 << "% Test: " << 100 - (size_training * 100) << "%:" << endl;
 	cout << "Training: ";

@@ -11,6 +11,12 @@
 using namespace std;
 using namespace cv;
 
+// Clase que se encarga de utilizar las aplicaciones de OpenCV "opencv_traincascade.exe" y "opencv_createsamples.exe".
+// Para ello, crea dos archivos.bat (uno para "opencv_traincascade.exe" y otro para "opencv_createsamples.exe") que
+// ejecutará en un terminal generando (mediante "opencv_createsamples.exe") los archivos.vec necesarios para entrenar
+// el clasificador (mediante "opencv_traincascade.exe"). Nota: Ambos ejecutables deben estar en la carpeta del proyecto.
+//
+// Además contiene todos los parámetros empleados en el entrenamiento y cadenas necesarias para invocar estas aplicaciones.
 class OpenCVApps{
 private:
 	vector<String> expresiones;
