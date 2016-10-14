@@ -4,6 +4,8 @@
 
 # Directorios
 doc/
+build/
+
 
 # Prerequisites
 *.d
