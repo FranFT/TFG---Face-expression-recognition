@@ -1,0 +1,87 @@
+#!/bin/bash
+
+################################
+##### Variables necesarias #####
+################################
+# Nombres de directorios.
+POS_DIR=TrainImages/pos
+NEG_DIR=TrainImages/neg
+DETECTOR_DIR=data
+#
+# Nombres de ficheros de salida.
+POS_OUTPUT_FILE="cars.info"
+NEG_OUTPUT_FILE="bg.txt"
+VEC_FILE="cars.vec"
+CLASIFICADOR="haarcascade_carsideview.xml"
+#
+# Número de casos positivos.
+NUM_OBJS=""
+#
+# Información adicional a añadir en los casos positivos.
+#
+#														[Posición del objeto en la imagen]
+# 'numero_objs_en_la_imagen' 'pos_X' 'pos_Y' 'Ancho' 'Alto'
+INFO=" 1 0 0 100 40"
+#
+# Anchura y altura de las imagenes de salida en el fichero .vec
+ANCHURA="48"
+ALTURA="24"
+#
+# Parámetros del entrenamiento.
+STAGES="13"
+FEATURE_TYPE="LBP"
+
+
+#############################
+##### INICIO DEL SCRIPT #####
+#############################
+
+### Borro los fichero de salida si existen.
+# Fichero de casos positivos.
+if [ -f $POS_OUTPUT_FILE ];
+then
+	rm $POS_OUTPUT_FILE
+fi
+# Fichero de casos negativos.
+if [ -f $NEG_OUTPUT_FILE ];
+then
+	rm $NEG_OUTPUT_FILE
+fi
+# Fichero .vec
+if [ -f $VEC_FILE ];
+then
+	rm $VEC_FILE
+fi
+### Borro el directorio de salida del detector si existe y lo creo de nuevo.
+if [ -d $DETECTOR_DIR ];
+then
+	rm -r $DETECTOR_DIR
+fi
+mkdir $DETECTOR_DIR
+
+
+# Genero el fichero de casos positivos.
+for entry in "$POS_DIR"/*
+do
+	echo $entry$INFO >> $POS_OUTPUT_FILE
+done
+
+# Genero el fichero de casos negativos.
+for entry in "$NEG_DIR"/*
+do
+	echo $entry >> $NEG_OUTPUT_FILE
+done
+
+# Obtengo el número de lineas del fichero de casos positivos.
+NUM_OBJS=`wc -l < $POS_OUTPUT_FILE`
+
+# Genero el fichero .vec
+opencv_createsamples -info $POS_OUTPUT_FILE -num $NUM_OBJS -w $ANCHURA -h $ALTURA -vec $VEC_FILE
+
+# Entreno el clasificador con los parámetros de entrada definidos arriba.
+opencv_traincascade -data $DETECTOR_DIR -vec $VEC_FILE -bg $NEG_OUTPUT_FILE -numPos 500 -numNeg 500 -numStages $STAGES -w $ANCHURA -h $ALTURA -featureType $FEATURE_TYPE
+
+# Borro los ficheros auxiliares.
+mv data/cascade.xml ../../data/$CLASIFICADOR
+rm -r data/
+rm $POS_OUTPUT_FILE $NEG_OUTPUT_FILE $VEC_FILE
