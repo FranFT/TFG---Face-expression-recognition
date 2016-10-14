@@ -1,6 +1,6 @@
 // yaw00_lev2_p00_classic.mh: machine generated classical descriptor matcher
 //
-// Command: tasm -d ../stasm/MOD_1/ ../tasm/shapes/hands.shape
+// Command: tasm -d ../lib/STASM_hands/stasm/MOD_1 ../lib/STASM_hands/tasm/shapes/hands.shape
 
 #ifndef STASM_YAW00_LEV2_P00_CLASSIC_MH
 #define STASM_YAW00_LEV2_P00_CLASSIC_MH

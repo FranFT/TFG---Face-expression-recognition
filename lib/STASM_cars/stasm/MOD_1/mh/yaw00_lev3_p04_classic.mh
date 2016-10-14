@@ -1,0 +1,33 @@
+// yaw00_lev3_p04_classic.mh: machine generated classical descriptor matcher
+//
+// Command: tasm -d ../lib/STASM_cars/stasm/MOD_1 ../lib/STASM_cars/tasm/shapes/cars1.shape
+
+#ifndef STASM_YAW00_LEV3_P04_CLASSIC_MH
+#define STASM_YAW00_LEV3_P04_CLASSIC_MH
+
+namespace stasm {
+
+// static const int EYEMOUTH_DIST = 100;
+// static const double PYR_RATIO = 2;
+
+static const double yaw00_lev3_p04_prof[9] = // mean profile
+{
+    0, -0.0588745, 0.0711433, 0.552758, 0.574188, -0.229184, 0.252673, 0.155406, -1.03601
+};
+static const double yaw00_cov_lev3_p04[9*9] = // covariance matrix
+{
+    1, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1
+};
+
+static const ClassicDescMod yaw00_lev3_p04_classic(9, yaw00_lev3_p04_prof, yaw00_cov_lev3_p04);
+
+} // namespace stasm
+#endif // STASM_YAW00_LEV3_P04_CLASSIC_MH

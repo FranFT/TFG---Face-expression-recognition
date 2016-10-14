@@ -1,6 +1,6 @@
 // yaw00.mh: list of ASM descriptor models (machine generated from a 56 point landmark table)
 //
-// Command: tasm -d ../stasm/MOD_1/ ../tasm/shapes/hands.shape
+// Command: tasm -d ../lib/STASM_hands/stasm/MOD_1 ../lib/STASM_hands/tasm/shapes/hands.shape
 // STASM_VERSION "4.1.0"
 // TASM_MODNAME "yaw00"
 // TASM_DATADIR "../data"
