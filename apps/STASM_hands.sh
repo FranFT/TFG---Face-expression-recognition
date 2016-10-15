@@ -1,23 +1,20 @@
 #! /bin/bash
 
-#####################################################################
-# Descripción: Genera la aplicación para el reconocimiento de manos.#
-#####################################################################
+source ../data/info.sh
 
-### Variables ###
-DIRECTORIO_BUILD="buildHands"
-DIRECTORIO_LIB="../lib/STASM_hands"
+###############################################################################
+# Descripción: Entrena un modelo para el reconocimiento de manos usando STASM.#
+###############################################################################
 
-### Inicio del script ###
 # Creo el directorio de salida y me sitúo en él.
-mkdir -p ../$DIRECTORIO_BUILD
-cd ../$DIRECTORIO_BUILD
+mkdir -p ../$BUILD_DIR_HANDS
+cd ../$BUILD_DIR_HANDS
 
 # Compilo la build de la librería necesaria.
-cmake ../lib/STASM_hands/ && make
+cmake $LIB_DIR_HANDS && make
 
 # Entreno el modelo de puntos de las manos.
-./tasm -d $DIRECTORIO_LIB/stasm/MOD_1 $DIRECTORIO_LIB/tasm/shapes/hands.shape
+./tasm -d $LIB_DIR_HANDS/stasm/MOD_1 $LIB_DIR_HANDS/tasm/shapes/$HANDS_SHAPEFILE
 
 # Vuelvo a compilar los ejecutables con el nuevo modelo.
 make

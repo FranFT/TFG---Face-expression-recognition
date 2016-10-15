@@ -1,29 +1,28 @@
 #! /bin/bash
 
+source data/info.sh
+
 ####################################################
 # Descripción: Limpia todos los ficheros generados.#
 ####################################################
 
-#Variables
-DIRETORIO_BUILD_HANDS=buildHands
-DIRETORIO_BUILD_CARS=buildCars
-
-DIRECTORIO_HANDS_LOG=lib/STASM_hands/stasm/MOD_1/log/
-DIRECTORIO_CARS_LOG=lib/STASM_cars/stasm/MOD_1/log/
-
-#Borrado
 # Directorios de Build
-if [ -d $DIRETORIO_BUILD_HANDS ];
+if [ -d $BUILD_DIR_CARS ];
 then
-	rm -r $DIRETORIO_BUILD_HANDS
+	rm -r $BUILD_DIR_CARS
 fi
 
-if [ -d $DIRETORIO_BUILD_CARS ];
+if [ -d $BUILD_DIR_HANDS ];
 then
-	rm -r $DIRETORIO_BUILD_CARS
+	rm -r $BUILD_DIR_HANDS
+fi
+
+if [ -d $DETECTAR_MANOS_BUILD_DIR ];
+then
+	rm -r $DETECTAR_MANOS_BUILD_DIR
 fi
 
 # Archivos log
-rm $DIRECTORIO_HANDS_LOG*
-rm $DIRECTORIO_CARS_LOG*
+rm $LOG_DIR_CARS*
+rm $LOG_DIR_HANDS*
 
