@@ -51,3 +51,11 @@ DETECTAR_MANOS_SOURCE_DIR=../test/detectarManos
 # Directorios.
 DETECTAR_COCHES_BUILD_DIR=buildDetectarCoches
 DETECTAR_COCHES_SOURCE_DIR=../test/detectarCoches
+
+
+####################
+### detectarCara ###
+####################
+# Directorios.
+DETECTAR_CARA_BUILD_DIR=buildDetectarCara
+DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
