@@ -34,3 +34,11 @@ HANDS_SHAPEFILE="hands.shape"
 # Directorios.
 DETECTAR_MANOS_BUILD_DIR=buildDetectarManos
 DETECTAR_MANOS_SOURCE_DIR=../test/detectarManos
+
+
+######################
+### detectarCoches ###
+######################
+# Directorios.
+DETECTAR_COCHES_BUILD_DIR=buildDetectarCoches
+DETECTAR_COCHES_SOURCE_DIR=../test/detectarCoches

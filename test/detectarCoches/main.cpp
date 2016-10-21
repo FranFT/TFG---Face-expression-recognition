@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include "stasm_lib.h"
 
-cv::CascadeClassifier hand_detector;
+cv::CascadeClassifier car_detector;
 float puntos_extraidos[2*stasm_NLANDMARKS];
 
 // Analiza una imagen tratando de identificar un vehículo.
@@ -16,7 +16,7 @@ void detect_car(cv::Mat& frame){
 	//cv::equalizeHist(gray_frame, gray_frame);
 	
 	// Uso el detector sobre la imagen.
-	hand_detector.detectMultiScale(
+	car_detector.detectMultiScale(
 		gray_frame,
 		detecciones,
 		1.5,
@@ -38,12 +38,12 @@ void detect_car(cv::Mat& frame){
 				}
 			
 			if(encontrado){
-				std::cout << "Mano encontrada en "<< detecciones[maxSize] << std::endl;
+				std::cout << "Coche encontrado...";
 				cv::rectangle(frame, detecciones[maxSize], cv::Scalar(0,0,255), 4);
-				int mano_encontrada;
+				int face_found;
 				cv::cvtColor(frame, gray_frame, cv::COLOR_BGR2GRAY);
 				if(!stasm_search_single(
-					&mano_encontrada,
+					&face_found,
 					puntos_extraidos,
 					(char*)gray_frame.data,
 					gray_frame.size().width,
@@ -51,23 +51,30 @@ void detect_car(cv::Mat& frame){
 					"path_prueba",
 					"../data")){
 						std::cout << "Puntos no encontrados" << std::endl;
-				}
-				else{
-						cv::Point2f p1, p2;
-						p1 = cv::Point2f(puntos_extraidos[0],puntos_extraidos[1]);
-						cv::circle(frame, p1, 1, cv::Scalar(0,255,0), 3);
-						
-						
-						for(int i=2; i<stasm_NLANDMARKS*2; i+=2){
-							p2 = cv::Point2f(puntos_extraidos[i],puntos_extraidos[i+1]);
-							cv::circle(frame, p2, 1, cv::Scalar(0,255,0), 3);
-							cv::line(frame, p1, p2, cv::Scalar(0,255,0));
-							p1 = p2;
 					}
-				}
-			}	
+			}
+			
+
+			//std::cout << detecciones[0] << std::endl;
+			//cv::rectangle(frame, detecciones[0], cv::Scalar(0,0,255), 4);
 		}
 }
+
+/*void detect_car(cv::Mat& frame){
+	int face_found;
+
+	if(stasm_search_single(
+		&face_found,
+		puntos_extraidos,
+		(char*)frame.data,
+		frame.cols,
+		frame.rows,
+		"/pos",
+		"../data")){
+			std::cout << "Puntos encontrados" << std::endl;
+		}
+
+}*/
 
 // Programa principal.
 int main(int argc, char** argv){
@@ -79,7 +86,7 @@ int main(int argc, char** argv){
 		return -1;
 	}
 	
-	if(!hand_detector.load("../data/hands_toy.xml")){
+	if(!car_detector.load("../data/haarcascade_carsideview.xml")){
 		std::cerr << "No se ha podido abrir el clasificador.\n";
 		return -1;
 	}

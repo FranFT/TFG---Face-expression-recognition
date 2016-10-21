@@ -25,6 +25,12 @@ then
 	rm -r $DETECTAR_MANOS_BUILD_DIR
 fi
 
+if [ -d $DETECTAR_COCHES_BUILD_DIR ];
+then
+	echo "Borrando el directorio '$DETECTAR_COCHES_BUILD_DIR'..."
+	rm -r $DETECTAR_COCHES_BUILD_DIR
+fi
+
 # Archivos log: Si hay ficheros en el directorio 'log' correspondiente, se borran.
 if [ `ls $LOG_DIR_CARS | wc -l` -gt "0" ];
 then
