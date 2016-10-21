@@ -4,6 +4,15 @@
 # Descripción: Contiene las variables necesarias para cada script.#
 ###################################################################
 
+#############
+### STASM ###
+#############
+# Directorios.
+BUILD_DIR_STASM=buildSTASM
+LIB_DIR_STASM=../lib/STASM
+LOG_DIR_STASM=lib/STASM/stasm/MOD_1/log/
+
+
 ##################
 ### STASM_cars ###
 ##################
