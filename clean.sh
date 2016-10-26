@@ -25,6 +25,12 @@ then
 	rm -r $BUILD_DIR_HANDS
 fi
 
+if [ -d $BUILD_DIR_ASMLIB ];
+then
+	echo "Borrando el directorio '$BUILD_DIR_ASMLIB'..."
+	rm -r $BUILD_DIR_ASMLIB
+fi
+
 if [ -d $DETECTAR_MANOS_BUILD_DIR ];
 then
 	echo "Borrando el directorio '$DETECTAR_MANOS_BUILD_DIR'..."

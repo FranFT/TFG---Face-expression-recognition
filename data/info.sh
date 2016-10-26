@@ -38,6 +38,14 @@ LOG_DIR_HANDS=lib/STASM_hands/stasm/MOD_1/log/
 HANDS_SHAPEFILE="hands.shape"
 
 
+####################
+### asmlib-opencv###
+####################
+# Directorios.
+BUILD_DIR_ASMLIB=buildASMLIB
+LIB_DIR_ASMLIB=../lib/asmlib-opencv-master/src/
+
+
 #####################
 ### detectarManos ###
 #####################
