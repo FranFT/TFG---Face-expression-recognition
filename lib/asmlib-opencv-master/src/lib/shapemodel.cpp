@@ -1,5 +1,5 @@
 #include <cstdio>
-#include <highgui.h>
+//#include <highgui.h>
 #include "shapemodel.h"
 #include "asmmodel.h"
 #include "afreader.h"

@@ -1,7 +1,8 @@
 #ifndef ASMMODEL_H
 #define ASMMODEL_H
 #include "shapemodel.h"
-#include "cv.h"
+#include "opencv2/opencv.hpp"
+//#include "cv.h"
 
 /*! \mainpage asmlib-opencv Documentation
  *

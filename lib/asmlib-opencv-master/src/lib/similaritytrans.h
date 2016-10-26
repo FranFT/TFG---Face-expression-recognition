@@ -1,7 +1,8 @@
 #ifndef SIMILARITYTRANS_H
 #define SIMILARITYTRANS_H
 
-#include "cv.h"
+//#include "cv.h"
+#include "opencv2/opencv.hpp"
 using cv::Mat;
 
 namespace StatModel {
