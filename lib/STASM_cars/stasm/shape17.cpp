@@ -181,7 +181,7 @@ static const int* Shape17Tab( // get appropriate tab to convert to a 17 point sh
     switch (shape.rows)
     {
     case 17:  tab = shape17_tab; break; // identity transform
-    case 20:  tab = bioid_tab;   break; // BioID
+    //case 20:  tab = bioid_tab;   break; // BioID
     case 21:  tab = aflw_tab;    break; // AFLW
     case 22:  tab = bioid_tab;   break; // AR
     case 68:  tab = muct_tab;    break; // XM2VTS and MUCT68

@@ -22,6 +22,7 @@ LIB_DIR_CARS=../lib/STASM_cars
 LOG_DIR_CARS=lib/STASM_cars/stasm/MOD_1/log/
 
 # Ficheros.
+#CARS_SHAPEFILE="cars1.shape"
 CARS_SHAPEFILE="cars1.shape"
 
 

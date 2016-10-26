@@ -46,19 +46,38 @@ void DetectFaces(          // all face rects into detpars
     const Image& img,      // in
     int          minwidth) // in: as percent of img width
 {
+		//if(img.cols != 100 || img.rows != 40) // sanity check
+			//Err("Image must be 100x40 (your image is %dx%d)", img.cols, img.rows);
+		
+		DetPar detpar;
+		detpar.x = img.cols/2; // Centro del coche.
+		detpar.y = img.rows/2;
+		detpar.width = img.cols - 10;//60;//20;//10;//95; // Tamaño aproximado del coche.
+		detpar.height = img.rows -10;//10;//10;//10;//5;//38;
+		detpar.yaw = 0;
+		detpar.eyaw = EYAW00;
+		detpars.resize(1);
+		detpars[0] = detpar;
+}
+
+/*void DetectFaces(          // all face rects into detpars
+    vec_DetPar&  detpars,  // out
+    const Image& img,      // in
+    int          minwidth) // in: as percent of img width
+{
 		if(img.cols != 100 || img.rows != 40) // sanity check
 			Err("Image must be 100x40 (your image is %dx%d)", img.cols, img.rows);
 		
 		DetPar detpar;
 		detpar.x = 50; // Centro del coche.
 		detpar.y = 20;
-		detpar.width = 95; // Tamaño aproximado del coche.
-		detpar.height = 38;
+		detpar.width = 60;//20;//10;//95; // Tamaño aproximado del coche.
+		detpar.height = 10;//10;//10;//5;//38;
 		detpar.yaw = 0;
 		detpar.eyaw = EYAW00;
 		detpars.resize(1);
 		detpars[0] = detpar;
-}
+}*/
 /*void DetectFaces(          // all face rects into detpars
     vec_DetPar&  detpars,  // out
     const Image& img,      // in

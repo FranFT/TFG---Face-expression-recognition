@@ -320,9 +320,9 @@ Shape ConvertShape(          // return shape with nlandmarks, return no rows if 
     {
         switch (nlandmarks)
         {
-        case 20:
+        /*case 20:
             newshape = Shape77As20(shape);  // BioID
-            break;
+            break;*/
         case 22:
             newshape = Shape77As22(shape);  // AR
             break;

@@ -22,8 +22,8 @@ void InitMods(           // initialize ASM model
             yaw00_meanshape,
             yaw00_eigvals,
             yaw00_eigvecs,
-            55,  // neigs (value from empirical testing)
-            1.3, // bmax  (value from empirical testing)
+            10,//1,//20,//55,  // neigs (value from empirical testing)
+            3,//4.5,//3.0,//1.3, // bmax  (value from empirical testing)
             0, // hackbits
             YAW00_DESCMODS, // defined in yaw00.mh
             NELEMS(YAW00_DESCMODS));
