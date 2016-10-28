@@ -68,3 +68,10 @@ DETECTAR_COCHES_SOURCE_DIR=../test/detectarCoches
 # Directorios.
 DETECTAR_CARA_BUILD_DIR=buildDetectarCara
 DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
+
+##################
+### IrisLibSVM ###
+##################
+# Directorios.
+IRIS_LIBSVM_BUILD_DIR=buildIrisLibSVM
+IRIS_LIBSVM_SOURCE_DIR=../test/iris_libSVM
