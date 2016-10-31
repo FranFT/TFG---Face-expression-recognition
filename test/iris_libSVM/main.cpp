@@ -17,6 +17,7 @@ struct svm_problem prob;
 struct svm_parameter param;
 struct svm_model *modelo;
 
+// Función que muestra el vector de muestras por pantalla.
 void mostrar(const vector<Muestra>& _vector){
 	for(vector<Muestra>::const_iterator it = _vector.begin(); it!= _vector.end(); ++it){
 		cout << "Atrr1: " << (*it).atributos[0] <<
@@ -53,6 +54,7 @@ int contar_lineas(const char* _file_path){
 	return num_lineas;
 }
 
+// Modifica una Muestra dada con el contenido de un string '_linea'.
 bool insertar_muestra(Muestra &_muestra, string _linea){
 	/***************************
 	**	Variables necesarias	**
@@ -64,30 +66,35 @@ bool insertar_muestra(Muestra &_muestra, string _linea){
 	/***************************
 	**	Cuerpo de la función	**
 	***************************/
+	// Para cada caracter de la linea.
 	for(int i = 0; i < _linea.size(); i++){
+		// Se inserta el atributo correspondiente.
 		if(_linea.at(i) == ','){
 			_muestra.atributos[attr] = stof(aux);
 			aux.clear();
 			attr++;
 		}
+		// Se inserta la clase.
 		else if(i+1 == _linea.size()){
 			aux += _linea.at(i);
 			if(aux == "Iris-setosa")
-				_muestra.clase = 001;
+				_muestra.clase = 0;
 			else if(aux == "Iris-versicolor")
-				_muestra.clase = 010;
+				_muestra.clase = 1;
 			else if(aux == "Iris-virginica")
-				_muestra.clase = 100;
+				_muestra.clase = 2;
 			else{
 				_muestra.clase = -1;
 				salida = false;
 			}		
 		}
+		// Se acumula en 'aux' el elemento a insertar.
 		else{
 			aux += _linea.at(i);
 		}
 	}
 	
+	// Valor de retorno.
 	return salida;
 }
 
