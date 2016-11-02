@@ -188,6 +188,30 @@ bool calcular_muestra_training(
 	return salida;
 }
 
+// Asigna los datos al dato estructurado 'svm_problem'.
+void crear_problema(const vector<Muestra>& _poblacion, const vector<bool> _perteneceTraining){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	int elementosTraining = 0;
+	
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Cuantifico el número de elementos que hay en la muestra de training.
+	for(vector<bool>::const_iterator it = _perteneceTraining.begin(); it != _perteneceTraining.end(); ++it)
+		if((*it))
+			elementosTraining++;
+			
+			
+	prob.l = elementosTraining;
+	prob.y = new double[]
+
+}
+
+
+
 // Programa principal.
 int main(int argc, char** argv){
 	/***************************
@@ -208,6 +232,7 @@ int main(int argc, char** argv){
 	if(!calcular_muestra_training(perteneceTraining, poblacion.size()))
 		return 1;
 
+	crear_problema(poblacion, perteneceTraining);
 
 		
 
