@@ -8,10 +8,13 @@
 
 using namespace std;
 
+// Número de características que tiene cada elemento del 'irisDataset'.
+const int numCaracteristicas = 4;
+
 // Tipo estructurado que representa cada entrada de 'irisDataset'.
 struct Muestra{
 	int clase;
-	float atributos[4];
+	float atributos[numCaracteristicas];
 };
 
 // Variables necesarias para SVM.
@@ -142,7 +145,7 @@ bool leeFichero(const char* _file_path, vector<Muestra>& _poblacion){
 bool calcular_muestra_training(
 	vector<bool>& _perteneceTraining,
 	const int _size,
-	const float _sizeTraining = 0.8){
+	const float _sizeTraining = 0.5){
 	/***************************
 	**	Variables necesarias	**
 	***************************/
@@ -170,7 +173,7 @@ bool calcular_muestra_training(
 		srand(semilla);
 		
 		// Barajo el vector.
-		random_shuffle(_training.begin(), _training.end());
+		random_shuffle( _training.begin(), _training.end() );
 
 		// Asigno cada muestra a training en función del resultado de la instrucción anterior.
 		if(!_perteneceTraining.empty())
@@ -204,12 +207,47 @@ void crear_problema(const vector<Muestra>& _poblacion, const vector<bool> _perte
 		if((*it))
 			elementosTraining++;
 			
-			
+	// Reservo memoria.
 	prob.l = elementosTraining;
-	prob.y = new double[]
-
+	prob.y = new double[elementosTraining];
+	prob.x = new svm_node*[elementosTraining];
+	
+	// Relleno la memoria reservada con la información de la muestra de training.
+	for(int i = 0, pos = 0; i < _poblacion.size(); i++){
+		if(_perteneceTraining.at(i)){
+			prob.y[pos] = _poblacion.at(i).clase;
+			prob.x[pos] = new svm_node[ numCaracteristicas + 1 ];
+			for(int j = 0; j < numCaracteristicas; j++){
+				prob.x[pos][j].index = j;
+				prob.x[pos][j].value = _poblacion.at(i).atributos[j];
+			}
+			prob.x[pos][numCaracteristicas].index = -1;
+			prob.x[pos][numCaracteristicas].value = -1;			
+			pos++;
+		}
+	}
 }
 
+void liberar_memoria(){
+	if(prob.l > 0){
+		for(int i = 0; i < prob.l; i++)
+			delete[] prob.x[i];
+		delete[] prob.x;
+		delete[] prob.y;
+	}
+}
+
+
+void mostrar_problema(){
+	if(prob.l > 0){
+		for(int i = 0; i < prob.l; i++){
+			cout << "Clase: " << prob.y[i];
+			for(int j = 0; j < numCaracteristicas + 1; j++)
+				cout << " (" << prob.x[i][j].index << ", " << prob.x[i][j].value << ") ";
+			cout << endl;
+		}
+	}
+}
 
 
 // Programa principal.
@@ -232,9 +270,13 @@ int main(int argc, char** argv){
 	if(!calcular_muestra_training(perteneceTraining, poblacion.size()))
 		return 1;
 
+	// Creo las estructuras de datos que representan la muestra de training para libSVM.
 	crear_problema(poblacion, perteneceTraining);
+	
+	mostrar_problema();
 
-		
+	// Libero la memoria de las estructuras auxiliares.
+	liberar_memoria();
 
 	return 0;
 }
