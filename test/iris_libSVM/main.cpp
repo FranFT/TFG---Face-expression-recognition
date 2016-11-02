@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cmath>
 #include <string>
 #include <vector>
-#include <fstream>
 #include "svm.h"
 
 using namespace std;
@@ -136,6 +138,56 @@ bool leeFichero(const char* _file_path, vector<Muestra>& _poblacion){
 	return salida;
 }
 
+// Función que asigna cada muestra de la población a training o test.
+bool calcular_muestra_training(
+	vector<bool>& _perteneceTraining,
+	const int _size,
+	const float _sizeTraining = 0.8){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	bool salida = true;
+	int semilla;
+	int indMax;
+	vector<int> _training;
+	
+
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Control de los parámetros de entrada.
+	if(_size <= 0)
+		salida = false;
+	
+	// Si el paŕametro es correcto.
+	if(salida){	
+		// Relleno el vector con los índices.
+		for(int i=0; i<_size; i++)
+			_training.push_back(i);
+		
+		// Inicializo el generador de números aleatorios.
+		semilla = time(NULL);
+		srand(semilla);
+		
+		// Barajo el vector.
+		random_shuffle(_training.begin(), _training.end());
+
+		// Asigno cada muestra a training en función del resultado de la instrucción anterior.
+		if(!_perteneceTraining.empty())
+			_perteneceTraining.clear();
+		_perteneceTraining = vector<bool>(_size, false);
+		
+		// Número máximo de elementos que estarán en la muestra.
+		indMax = ceil(_size * _sizeTraining);
+		
+		for(int i = 0; i < indMax; i++)
+			_perteneceTraining.at( _training.at(i) ) = true;		
+	}	
+	
+	
+	return salida;
+}
+
 // Programa principal.
 int main(int argc, char** argv){
 	/***************************
@@ -143,13 +195,21 @@ int main(int argc, char** argv){
 	***************************/
 	const char* file_path = "../data/irisDataset/iris.data";
 	vector<Muestra> poblacion;
+	vector<bool> perteneceTraining;
 	
 	/***************************
 	**	Cuerpo de la función	**
 	***************************/
-	if(leeFichero(file_path, poblacion)){
-		mostrar(poblacion);
-	}
+	// Inserto las muestras del fichero en el vector.
+	if(!leeFichero(file_path, poblacion))
+		return 1;
+	
+	// Asigno cada muestra a training o test.
+	if(!calcular_muestra_training(perteneceTraining, poblacion.size()))
+		return 1;
+
+
+		
 
 	return 0;
 }
