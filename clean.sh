@@ -55,6 +55,12 @@ then
 	rm -r $IRIS_LIBSVM_BUILD_DIR
 fi
 
+if [ -d $DOUGLAS_PEUCKER_BUILD_DIR ];
+then
+	echo "Borrando el directorio '$DOUGLAS_PEUCKER_BUILD_DIR'..."
+	rm -r $DOUGLAS_PEUCKER_BUILD_DIR
+fi
+
 # Archivos log: Si hay ficheros en el directorio 'log' correspondiente, se borran.
 if [ `ls $LOG_DIR_STASM | wc -l` -gt "0" ];
 then

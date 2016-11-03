@@ -75,3 +75,10 @@ DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
 # Directorios.
 IRIS_LIBSVM_BUILD_DIR=buildIrisLibSVM
 IRIS_LIBSVM_SOURCE_DIR=../test/iris_libSVM
+
+######################
+### DouglasPeucker ###
+######################
+# Directorios.
+DOUGLAS_PEUCKER_BUILD_DIR=buildDouglasPeucker
+DOUGLAS_PEUCKER_SOURCE_DIR=../test/douglasPeucker

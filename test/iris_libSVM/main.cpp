@@ -173,7 +173,7 @@ bool calcular_muestra_training(
 		srand(semilla);
 		
 		// Barajo el vector.
-		random_shuffle( _training.begin(), _training.end() );
+		random_shuffle( _training.begin(), _training.end() 	);
 
 		// Asigno cada muestra a training en función del resultado de la instrucción anterior.
 		if(!_perteneceTraining.empty())
