@@ -33,7 +33,7 @@ void pintaI(const Mat& _imagen, const char* _nombre_ventana){
 
 // Función que dada una coordenada X, obtiene una coordenada Y aplicando una función seno:
 double obtenerY(double x){
-	return (sin(x) * ALTO/2) + ALTO/2;;
+	return (sin(x) * ALTO/2) + ALTO/2;
 }
 
 // Devuelve una matriz de puntos 2D que definen la curva que se desea simplificar.

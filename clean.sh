@@ -61,6 +61,16 @@ then
 	rm -r $DOUGLAS_PEUCKER_BUILD_DIR
 fi
 
+
+
+if [ -d $SIMPLIFICACION_STASM_BUILD_DIR ];
+then
+	echo "Borrando el directorio '$SIMPLIFICACION_STASM_BUILD_DIR'..."
+	rm -r $SIMPLIFICACION_STASM_BUILD_DIR
+fi
+
+
+
 # Archivos log: Si hay ficheros en el directorio 'log' correspondiente, se borran.
 if [ `ls $LOG_DIR_STASM | wc -l` -gt "0" ];
 then

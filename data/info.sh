@@ -69,6 +69,7 @@ DETECTAR_COCHES_SOURCE_DIR=../test/detectarCoches
 DETECTAR_CARA_BUILD_DIR=buildDetectarCara
 DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
 
+
 ##################
 ### IrisLibSVM ###
 ##################
@@ -76,9 +77,24 @@ DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
 IRIS_LIBSVM_BUILD_DIR=buildIrisLibSVM
 IRIS_LIBSVM_SOURCE_DIR=../test/iris_libSVM
 
+
 ######################
 ### DouglasPeucker ###
 ######################
 # Directorios.
 DOUGLAS_PEUCKER_BUILD_DIR=buildDouglasPeucker
 DOUGLAS_PEUCKER_SOURCE_DIR=../test/douglasPeucker
+
+
+###########################
+### simplificacionSTASM ###
+###########################
+# Directorios.
+SIMPLIFICACION_STASM_BUILD_DIR=buildSimplificacionSTASM
+SIMPLIFICACION_STASM_SOURCE_DIR=../test/simplificacionSTASM
+
+
+
+
+
+
