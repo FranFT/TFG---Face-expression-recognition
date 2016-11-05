@@ -7,6 +7,7 @@
 using namespace std;
 using namespace cv;
 
+// Inserta el punto de coordenadas X,Y de _linea en la posición de la matriz: _puntos(_fila, _col).
 void insertar_punto( const string& _linea, Mat& _puntos, const int _fila, const int _col ){
 	/***************************
 	**	Variables necesarias	**
@@ -96,13 +97,64 @@ Mat leerShapeFile( const char* _filename ){
 	return puntos;
 }// Fin del método 'leerShapeFile'.
 
+/**
+* Función que selecciona los puntos utilizables tras la simplificación. Para ello, aplica el
+* algoritmo de Douglas Peucker a todas las entradas y selecciona aquella que mantiene MÁS puntos
+* tras la simplificación.
+*	Se devuelven los índices de los puntos utilizables según esta simplificación. En caso de error en 
+* el proceso se devuelve el vector vacío.
+**/
+vector<int> obtener_indices(const Mat& _puntos, const double _epsilon){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	int indice = 0; // Indice de la entrada con el mayor número de puntos tras la simplificación.
+	int numPuntos = 0;	// Variable usada para calcular el máximo.
+	int maxPuntos = 0;	// Variable usada para calcular el máximo.
+	vector<int> indices;
+	Mat puntos_simplificados;
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Obtengo la entrada que mantiene más puntos tras la simplificación.
+	for( int i = 0; i < _puntos.cols; i++ ){
+		numPuntos = douglasPeucker( _puntos.col( i ), _epsilon ).rows;
+		if( numPuntos > maxPuntos ){
+			maxPuntos = numPuntos;
+			indice = i;
+		}
+	}
+	
+	// Almaceno la simplificación de puntos con mayor número de puntos.
+	puntos_simplificados = douglasPeucker( _puntos.col( indice ), _epsilon );
+	
+	// Busco y almaceno los índices de puntos que estan antes y después de la simplificación.
+	for( int i = 0, j = 0; i < _puntos.rows; i++ ){
+		if( _puntos.at<Vec2f>( i, indice ) == puntos_simplificados.at<Vec2f>( j, 0 ) ){
+			indices.push_back( i );
+			j++;
+		}
+	}
+	
+	// Si el número de índices encontrados no coincide con el número de puntos tras la simplificación
+	// se devuelve el vector vacío como signo de error.
+	if( indices.size() != puntos_simplificados.rows )
+		indices.clear();
+		
+	return indices;	
+}// Fin del método 'obtener_indices'.
+
 // Programa principal.
 int main( int argc, char** argv ){
 	/***************************
 	**	Variables necesarias	**
 	***************************/
+
+	const double epsilon = 100.0; // Parámetro del algoritmo de Douglas Peucker.
 	const char* nombre_fichero = "../lib/STASM_handsSimplificado/tasm/shapes/hands.shape";
-	Mat shapefile_points;
+	Mat shapefile_points; // Matriz donde se leen los puntos del fichero.
+	vector<int> puntos_utilizables; // Indices de los puntos utilizables tras la simplificación.
 	
 	
 	/***************************
@@ -112,10 +164,23 @@ int main( int argc, char** argv ){
 	shapefile_points = leerShapeFile( nombre_fichero );
 	
 	// Si no se han obtenido puntos se notifica el error.
-	if(shapefile_points.empty()){
+	if( shapefile_points.empty() ){
 		cerr << "No se han podido extrar puntos del fichero: '" << nombre_fichero << "'." << endl;
 		return 1;
-	}	
+	}
+	
+	// Obtengo los índices de los puntos utilizables.
+	puntos_utilizables = obtener_indices( shapefile_points, epsilon );
+	if( puntos_utilizables.empty() ){
+		cerr << "Error en el método 'obtener_indices()'" << endl;
+		return 1;	
+	}
+	
+	
 	
 	return 0;
 }// Fin del método 'main'.
+
+
+
+
