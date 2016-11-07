@@ -213,7 +213,51 @@ vector<string> obtenerNombresImagenes(const char* _filename){
 }// Fin del método 'obtenerNombresImagenes'.
 
 
+// Función que escribe el shape file de puntos simplificados.
+bool generarShapefile(
+	const Mat& _puntos,
+	const vector<int>& _indices,
+	const vector<string> _nombres_imagenes ){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	const char* nombre_fichero = "handsSimplificado.shape";
+	ofstream fichero_salida;
 
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Abro el fichero descartando el contenido actual.
+	fichero_salida.open( nombre_fichero, ios::trunc );
+	
+	if( !fichero_salida.is_open() )
+		return false;
+	
+	// Comienzo a escribir en el fichero.
+	// Escribo la cabecera.
+	fichero_salida << "shape " << nombre_fichero << endl << endl <<
+	"# Change the following to the location of your hand images\n" <<
+	"Directories /home/fran/Dropbox/TFG---Face-expression-recognition/res/Hands/images\n" << endl;
+	
+	// Después de la cabecera comienzo a escribir los puntos.
+	for( int i = 0; i < _puntos.cols; i++ ){
+		fichero_salida << "00000000 " << _nombres_imagenes.at(i) << endl <<
+		"{ " << _indices.size() << " 2" << endl;
+
+		for( int j = 0; j < _indices.size(); j++ ){
+			fichero_salida <<
+			static_cast<float>(_puntos.at<Vec2f>( _indices.at(j), i )[0]) << " " <<
+			static_cast<float>(_puntos.at<Vec2f>( _indices.at(j), i )[1]) << endl;
+		}
+		fichero_salida << "}" << endl;
+		
+	}
+		
+	fichero_salida.close();
+	
+	return true;
+}// Fin del método 'generarShapefile'.
 
 // Programa principal.
 int main( int argc, char** argv ){
@@ -250,10 +294,12 @@ int main( int argc, char** argv ){
 		return 1;	
 	}
 	
-
-	
-	
-	
+	// Genero el shapefile.
+	if( !generarShapefile( shapefile_points, puntos_utilizables, nombre_imagenes ) ){
+		cerr << "No se pudo generar el shapefile." << endl;
+		return 1; 
+	}
+		
 	return 0;
 }// Fin del método 'main'.
 
