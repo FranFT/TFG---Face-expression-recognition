@@ -145,25 +145,92 @@ vector<int> obtener_indices(const Mat& _puntos, const double _epsilon){
 	return indices;	
 }// Fin del método 'obtener_indices'.
 
+// Función que obtiene los nombres de imágenes necesarios para crear el shapefile.
+vector<string> obtenerNombresImagenes(const char* _filename){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	ifstream shapefile;
+	streampos posicion_actual, posicion_anterior;
+	string linea, nombre_imagen;
+	vector<string> salida;
+	bool exito = true;
+	bool repetida = false;
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Abro el fichero.
+	shapefile.open( _filename );
+	
+	if( !shapefile.is_open() )
+		return salida;
+	
+	// Almaceno la posición de la linea actual.
+	posicion_actual = shapefile.beg;
+	
+	// Hasta el final del fichero o en caso de error.
+	while(getline( shapefile, linea ) && exito){
+		// Si no obtengo el caracter '{' al comienzo de la linea actualizo la posición de la linea anterior.
+		if( linea[0] != '{' ){
+			posicion_anterior = posicion_actual;
+			posicion_actual = shapefile.tellg();
+		}
+		// Si me encuentro una linea con '{' y no es repetida.
+		else if( !repetida ){
+			// Leo la linea anterior.
+			shapefile.seekg( posicion_anterior );
+			getline( shapefile, linea );
+			
+			// Almaceno todo aquello tras el espacio en blanco.
+			size_t encontrado = linea.find_first_of(' ');
+			if( encontrado != string::npos ){
+				for(encontrado = encontrado + 1; encontrado != linea.length(); encontrado++)
+					nombre_imagen += linea[encontrado];
+			
+				salida.push_back( nombre_imagen );
+				nombre_imagen.clear();
+				
+				// Vuelvo a la linea y la marco como repetida, para que en la siguiente iteración se ignore.
+				shapefile.seekg( posicion_actual );
+				repetida = true;
+			}
+			else{
+				exito = false;
+			}
+		}
+		// Si la linea es repetida desactivo ese flag.
+		else if( repetida ){
+			repetida = false;
+		}
+	}
+	
+	// Si algo ha fallado durante el proceso se devuelve el vector vacío.
+	if( !exito )
+		salida.clear();
+	
+	return salida;
+}// Fin del método 'obtenerNombresImagenes'.
+
+
+
+
 // Programa principal.
 int main( int argc, char** argv ){
 	/***************************
 	**	Variables necesarias	**
 	***************************/
-
-	const double epsilon = 100.0; // Parámetro del algoritmo de Douglas Peucker.
 	const char* nombre_fichero = "../lib/STASM_handsSimplificado/tasm/shapes/hands.shape";
+	const double epsilon = 100.0; // Parámetro del algoritmo de Douglas Peucker.
 	Mat shapefile_points; // Matriz donde se leen los puntos del fichero.
 	vector<int> puntos_utilizables; // Indices de los puntos utilizables tras la simplificación.
-	
+	vector<string> nombre_imagenes; // Nombres de las imagenes utilizadas en el fichero.
 	
 	/***************************
 	**	Cuerpo de la función	**
 	***************************/
 	// Leo los puntos del fichero.
 	shapefile_points = leerShapeFile( nombre_fichero );
-	
-	// Si no se han obtenido puntos se notifica el error.
 	if( shapefile_points.empty() ){
 		cerr << "No se han podido extrar puntos del fichero: '" << nombre_fichero << "'." << endl;
 		return 1;
@@ -175,6 +242,15 @@ int main( int argc, char** argv ){
 		cerr << "Error en el método 'obtener_indices()'" << endl;
 		return 1;	
 	}
+		
+	// Obtengo el nombre de los índices de las imágenes del shapefile.
+	nombre_imagenes = obtenerNombresImagenes( nombre_fichero );
+	if( nombre_imagenes.empty() ){
+		cerr << "Error en el método 'obtenerNombresImagenes()'" << endl;
+		return 1;	
+	}
+	
+
 	
 	
 	
