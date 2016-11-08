@@ -221,7 +221,7 @@ bool generarShapefile(
 	/***************************
 	**	Variables necesarias	**
 	***************************/
-	const char* nombre_fichero = "handsSimplificado.shape";
+	const char* nombre_fichero = "hands.shape";
 	ofstream fichero_salida;
 
 	
@@ -259,12 +259,52 @@ bool generarShapefile(
 	return true;
 }// Fin del método 'generarShapefile'.
 
+
+bool generarLandtabFile(const int _num_landmarks){
+
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	const char* nombre_fichero = "landtab_hands.h";
+	ofstream fichero_salida;
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Abro el fichero descartando el contenido actual.
+	fichero_salida.open( nombre_fichero, ios::trunc );
+	
+	if( !fichero_salida.is_open() )
+		return false;
+		
+	// Comienzo a escribir en el fichero.
+	// Cabecera:
+	fichero_salida << 
+	"#ifndef STASM_LANDTAB_HANDS" << _num_landmarks << "_H" << endl <<
+	"#define STASM_LANDTAB_HANDS" << _num_landmarks << "_H" << endl << endl <<
+	"// Note that we use classical 1D descriptors on all points (no HATS)" << endl <<
+	"// because all points are on edges.  HATs would probably work as well" << endl <<
+	"// but I haven't tried them here (to use a HAT descriptor at a point," << endl <<
+	"// set the AT_Hat bit in the \"bits\" field)." << endl << endl <<
+	"static const LANDMARK_INFO LANDMARK_INFO_TAB[" << _num_landmarks << "] =" << endl <<
+	"{  // par pre next weight bits" << endl;
+	
+	// Características de cada landmark.
+	for( int i = 0; i < _num_landmarks; i++)
+		fichero_salida << "\t{ -1, -1,  -1,     1,   0 }, //" << i << endl;
+		
+	fichero_salida << "};" << endl << endl <<
+	"#endif //STASM_LANDTAB_HANDS" << _num_landmarks << "_H";
+		
+	return true;
+}
+
 // Programa principal.
 int main( int argc, char** argv ){
 	/***************************
 	**	Variables necesarias	**
 	***************************/
-	const char* nombre_fichero = "../lib/STASM_handsSimplificado/tasm/shapes/hands.shape";
+	const char* nombre_shapefile = "../lib/STASM_handsSimplificado/tasm/shapes/hands.shape";
 	const double epsilon = 100.0; // Parámetro del algoritmo de Douglas Peucker.
 	Mat shapefile_points; // Matriz donde se leen los puntos del fichero.
 	vector<int> puntos_utilizables; // Indices de los puntos utilizables tras la simplificación.
@@ -274,9 +314,9 @@ int main( int argc, char** argv ){
 	**	Cuerpo de la función	**
 	***************************/
 	// Leo los puntos del fichero.
-	shapefile_points = leerShapeFile( nombre_fichero );
+	shapefile_points = leerShapeFile( nombre_shapefile );
 	if( shapefile_points.empty() ){
-		cerr << "No se han podido extrar puntos del fichero: '" << nombre_fichero << "'." << endl;
+		cerr << "No se han podido extrar puntos del fichero: '" << nombre_shapefile << "'." << endl;
 		return 1;
 	}
 	
@@ -288,7 +328,7 @@ int main( int argc, char** argv ){
 	}
 		
 	// Obtengo el nombre de los índices de las imágenes del shapefile.
-	nombre_imagenes = obtenerNombresImagenes( nombre_fichero );
+	nombre_imagenes = obtenerNombresImagenes( nombre_shapefile );
 	if( nombre_imagenes.empty() ){
 		cerr << "Error en el método 'obtenerNombresImagenes()'" << endl;
 		return 1;	
@@ -297,6 +337,12 @@ int main( int argc, char** argv ){
 	// Genero el shapefile.
 	if( !generarShapefile( shapefile_points, puntos_utilizables, nombre_imagenes ) ){
 		cerr << "No se pudo generar el shapefile." << endl;
+		return 1; 
+	}
+	
+	// Genero el fichero con la tabla de landmark.
+	if( !generarLandtabFile( puntos_utilizables.size() ) ){
+		cerr << "No se pudo generar la tabla de landmarks." << endl;
 		return 1; 
 	}
 		
