@@ -259,7 +259,8 @@ bool generarShapefile(
 	return true;
 }// Fin del método 'generarShapefile'.
 
-
+// Método que genera el archivo que contiene la tabla de landmarks. Devuelve true en caso de éxito
+// y false en caso contrario.
 bool generarLandtabFile(const int _num_landmarks){
 
 	/***************************
@@ -295,9 +296,68 @@ bool generarLandtabFile(const int _num_landmarks){
 		
 	fichero_salida << "};" << endl << endl <<
 	"#endif //STASM_LANDTAB_HANDS" << _num_landmarks << "_H";
-		
+	
+	// Cierro el fichero.
+	fichero_salida.close();		
 	return true;
-}
+}// Fin del método 'generarLandtabFile'.
+
+// Función que realiza las modificaciónes necesarias en el resto de fichero de la librería.
+bool modificarStasmLibFile( const int _num_landmarks ){
+	/***************************
+	**	Variables necesarias	**
+	***************************/
+	string nombre_fichero_stasm_lib = "stasm_lib.h";
+	string path_stasm = "../lib/STASM_handsSimplificado/stasm/";
+	string linea;
+	ifstream fichero_entrada;
+	ofstream fichero_salida;
+	streampos linea_a_modificar;
+	bool modificado = false;
+	
+	/***************************
+	**	Cuerpo de la función	**
+	***************************/
+	// Abro los ficheros.
+	fichero_entrada.open( path_stasm + nombre_fichero_stasm_lib );
+	fichero_salida.open( nombre_fichero_stasm_lib ); // Se abre en el directorio raiz del ejecutable.
+	
+	if( !fichero_entrada.is_open() || !fichero_salida.is_open() ){
+		fichero_entrada.close();
+		fichero_salida.close();
+		return false;
+	}
+	
+	// Busco la linea a modificar.
+	while( getline( fichero_entrada, linea ) ){
+		if( !modificado ){
+			size_t encontrado = linea.find( "static const int stasm_NLANDMARKS =" );
+			// Si se ha encontrado la linea inserto la linea modificada.
+			if( encontrado != string::npos ){
+				fichero_salida << "static const int stasm_NLANDMARKS = " << _num_landmarks <<
+				"; // number of landmarks" << endl;
+				modificado = true;
+			}
+			// En cualquier otro caso, copio la linea leída en el fichero.
+			else{
+				fichero_salida << linea << endl;
+			}
+		}
+		else{
+			fichero_salida << linea << endl;
+		}		
+	}
+	
+	// Si al llegar al final del fichero no se ha modificado la linea (no se ha encontrado), se
+	// devuelve error.
+	if( !modificado )
+		return false;
+	
+	// Cierro el stream.
+	fichero_entrada.close();
+	fichero_salida.close();
+	return true;
+}// Fin del método 'modificarFicheros'.
 
 // Programa principal.
 int main( int argc, char** argv ){
@@ -309,6 +369,7 @@ int main( int argc, char** argv ){
 	Mat shapefile_points; // Matriz donde se leen los puntos del fichero.
 	vector<int> puntos_utilizables; // Indices de los puntos utilizables tras la simplificación.
 	vector<string> nombre_imagenes; // Nombres de las imagenes utilizadas en el fichero.
+	
 	
 	/***************************
 	**	Cuerpo de la función	**
@@ -343,6 +404,11 @@ int main( int argc, char** argv ){
 	// Genero el fichero con la tabla de landmark.
 	if( !generarLandtabFile( puntos_utilizables.size() ) ){
 		cerr << "No se pudo generar la tabla de landmarks." << endl;
+		return 1; 
+	}
+	
+	if( !modificarStasmLibFile( puntos_utilizables.size() ) ){
+		cerr << "No se pudo modificar ficheros." << endl;
 		return 1; 
 	}
 		
