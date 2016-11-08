@@ -221,7 +221,7 @@ bool generarShapefile(
 	/***************************
 	**	Variables necesarias	**
 	***************************/
-	const char* nombre_fichero = "hands.shape";
+	const char* nombre_fichero = "hands_simplificado.shape";
 	ofstream fichero_salida;
 
 	

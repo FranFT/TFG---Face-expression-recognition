@@ -90,6 +90,12 @@ DOUGLAS_PEUCKER_SOURCE_DIR=../test/douglasPeucker
 ### simplificacionSTASM ###
 ###########################
 # Directorios.
+# Libreria simplificada.
+BUILD_DIR_HANDS_SIMPLIFICADO=buildSTASM_handsSimplificado
+LIB_DIR_HANDS_SIMPLIFICADO=../lib/STASM_handsSimplificado
+LOG_DIR_HANDS_SIMPLIFICADO=lib/STASM_handsSimplificado/stasm/MOD_1/log/
+
+# Aplicación que simplifica.
 SIMPLIFICACION_STASM_BUILD_DIR=buildSimplificacionSTASM
 SIMPLIFICACION_STASM_SOURCE_DIR=../test/simplificacionSTASM
 

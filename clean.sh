@@ -61,15 +61,17 @@ then
 	rm -r $DOUGLAS_PEUCKER_BUILD_DIR
 fi
 
-
-
 if [ -d $SIMPLIFICACION_STASM_BUILD_DIR ];
 then
 	echo "Borrando el directorio '$SIMPLIFICACION_STASM_BUILD_DIR'..."
 	rm -r $SIMPLIFICACION_STASM_BUILD_DIR
 fi
 
-
+if [ -d $BUILD_DIR_HANDS_SIMPLIFICADO ];
+then
+	echo "Borrando el directorio '$BUILD_DIR_HANDS_SIMPLIFICADO'..."
+	rm -r $BUILD_DIR_HANDS_SIMPLIFICADO
+fi
 
 # Archivos log: Si hay ficheros en el directorio 'log' correspondiente, se borran.
 if [ `ls $LOG_DIR_STASM | wc -l` -gt "0" ];
@@ -88,4 +90,10 @@ if [ `ls $LOG_DIR_HANDS | wc -l` -gt "0" ];
 then
 	echo "Borrando archivos 'log' en '$LOG_DIR_HANDS'..."
 	rm $LOG_DIR_HANDS*
+fi
+
+if [ `ls $LOG_DIR_HANDS_SIMPLIFICADO | wc -l` -gt "0" ];
+then
+	echo "Borrando archivos 'log' en '$LOG_DIR_HANDS_SIMPLIFICADO'..."
+	rm $LOG_DIR_HANDS_SIMPLIFICADO*
 fi

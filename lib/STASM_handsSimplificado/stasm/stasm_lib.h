@@ -62,7 +62,7 @@
 #ifndef STASM_LIB_H
 #define STASM_LIB_H
 
-static const int stasm_NLANDMARKS = 56; // number of landmarks
+static const int stasm_NLANDMARKS = 14; // number of landmarks
 
 extern const char* const stasm_VERSION;
 
