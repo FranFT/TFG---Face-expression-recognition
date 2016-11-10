@@ -41,7 +41,7 @@ mkdir -p $BUILD_DIR_HANDS_SIMPLIFICADO
 cd $BUILD_DIR_HANDS_SIMPLIFICADO
 
 # Compilo la librería.
-cmake $LIB_DIR_HANDS_SIMPLIFICADO
+cmake $LIB_DIR_HANDS_SIMPLIFICADO && make
 
 # Entreno la librería con los puntos simplificados.
 ./tasm -d $LIB_DIR_HANDS_SIMPLIFICADO/stasm/MOD_1 $LIB_DIR_HANDS_SIMPLIFICADO/tasm/shapes/$FICHERO_SHAPEFILE

@@ -2,7 +2,7 @@
 using namespace cv;
 
 // Función que calcula la distancia de un punto _pt a la linea formada por 'l1' y 'l2'.
-double distanciaPerpendicular(Point2i _pt, Point2i l1, Point2i l2){
+double distanciaPerpendicular(Point2f _pt, Point2f l1, Point2f l2){
 	// Calculo el doble del área del triángulo formado por (_pt, l1, l2)
 	double area = abs( ( ( l2.y - l1.y ) * _pt.x ) - ( ( l2.x - l1.x ) * _pt.y ) +
 		(l2.x * l1.y) - (l2.y * l1.x) );
@@ -23,8 +23,8 @@ Mat douglasPeucker(Mat _puntos, double _epsilon){
 
 	// Busco el punto a mayor distancia del segmento formado por los puntos extremos.
 	for(int i = 1; i < _puntos.rows - 1; i++){
-		distancia_actual = distanciaPerpendicular( _puntos.at<Vec2i>( i, 0 ), // Punto i-esimo.
-			_puntos.at<Vec2i>( 0, 0 ), _puntos.at<Vec2i>( _puntos.rows - 1, 0 )); // Segmento.
+		distancia_actual = distanciaPerpendicular( _puntos.at<Vec2f>( i, 0 ), // Punto i-esimo.
+			_puntos.at<Vec2f>( 0, 0 ), _puntos.at<Vec2f>( _puntos.rows - 1, 0 )); // Segmento.
 		
 		// Actualizo la distancia máxima.
 		if( distancia_actual > distancia_maxima ){

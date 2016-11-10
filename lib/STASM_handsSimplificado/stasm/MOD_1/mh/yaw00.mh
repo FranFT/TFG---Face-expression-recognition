@@ -1,0 +1,129 @@
+// yaw00.mh: list of ASM descriptor models (machine generated from a 11 point landmark table)
+//
+// Command: tasm -d ../lib/STASM_handsSimplificado/stasm/MOD_1 ../lib/STASM_handsSimplificado/tasm/shapes/hands_simplificado.shape
+// STASM_VERSION "4.1.0"
+// TASM_MODNAME "yaw00"
+// TASM_DATADIR "../data"
+// TASM_DISALLOWED_ATTR_BITS 0x700
+// TASM_MEANSHAPE_USES_SHAPES_WITH_MISSING_POINTS 0
+// TASM_REBUILD_SUBSET NULL
+// TASM_SUBSET_DESC_MODS 1
+// TASM_FACEDET_MINWIDTH 50
+// TASM_DET_EYES_AND_MOUTH 0
+// TASM_1D_PROFLEN 9
+// TASM_NNEG_TRAIN_DESCS 1
+// TASM_NEG_MIN_OFFSET 1
+// TASM_NEG_MAX_OFFSET 6
+// TASM_NEGTRAIN_SEED 2013
+// TASM_BALANCE_NUMBER_OF_CASES 0
+// TASM_BINARY_DISTANCE 0
+// HAT_PATCH_WIDTH 19
+// HAT_PATCH_WIDTH_ADJ -6
+// HAT_START_LEV 2
+// EYEMOUTH_DIST 100
+// PYR_RATIO  0
+// N_PYR_LEVS 4
+
+#ifndef STASM_YAW00_MH
+#define STASM_YAW00_MH
+
+#include "mh/yaw00_shapemodel.mh"
+
+#include "mh/yaw00_lev0_p00_classic.mh"
+#include "mh/yaw00_lev0_p01_classic.mh"
+#include "mh/yaw00_lev0_p02_classic.mh"
+#include "mh/yaw00_lev0_p03_classic.mh"
+#include "mh/yaw00_lev0_p04_classic.mh"
+#include "mh/yaw00_lev0_p05_classic.mh"
+#include "mh/yaw00_lev0_p06_classic.mh"
+#include "mh/yaw00_lev0_p07_classic.mh"
+#include "mh/yaw00_lev0_p08_classic.mh"
+#include "mh/yaw00_lev0_p09_classic.mh"
+#include "mh/yaw00_lev0_p10_classic.mh"
+#include "mh/yaw00_lev1_p00_classic.mh"
+#include "mh/yaw00_lev1_p01_classic.mh"
+#include "mh/yaw00_lev1_p02_classic.mh"
+#include "mh/yaw00_lev1_p03_classic.mh"
+#include "mh/yaw00_lev1_p04_classic.mh"
+#include "mh/yaw00_lev1_p05_classic.mh"
+#include "mh/yaw00_lev1_p06_classic.mh"
+#include "mh/yaw00_lev1_p07_classic.mh"
+#include "mh/yaw00_lev1_p08_classic.mh"
+#include "mh/yaw00_lev1_p09_classic.mh"
+#include "mh/yaw00_lev1_p10_classic.mh"
+#include "mh/yaw00_lev2_p00_classic.mh"
+#include "mh/yaw00_lev2_p01_classic.mh"
+#include "mh/yaw00_lev2_p02_classic.mh"
+#include "mh/yaw00_lev2_p03_classic.mh"
+#include "mh/yaw00_lev2_p04_classic.mh"
+#include "mh/yaw00_lev2_p05_classic.mh"
+#include "mh/yaw00_lev2_p06_classic.mh"
+#include "mh/yaw00_lev2_p07_classic.mh"
+#include "mh/yaw00_lev2_p08_classic.mh"
+#include "mh/yaw00_lev2_p09_classic.mh"
+#include "mh/yaw00_lev2_p10_classic.mh"
+#include "mh/yaw00_lev3_p00_classic.mh"
+#include "mh/yaw00_lev3_p01_classic.mh"
+#include "mh/yaw00_lev3_p02_classic.mh"
+#include "mh/yaw00_lev3_p03_classic.mh"
+#include "mh/yaw00_lev3_p04_classic.mh"
+#include "mh/yaw00_lev3_p05_classic.mh"
+#include "mh/yaw00_lev3_p06_classic.mh"
+#include "mh/yaw00_lev3_p07_classic.mh"
+#include "mh/yaw00_lev3_p08_classic.mh"
+#include "mh/yaw00_lev3_p09_classic.mh"
+#include "mh/yaw00_lev3_p10_classic.mh"
+
+namespace stasm
+{
+// YAW00_DESCMODS defines the descriptor model to use at each point
+static const BaseDescMod* YAW00_DESCMODS[] =
+{
+    &yaw00_lev0_p00_classic,
+    &yaw00_lev0_p01_classic,
+    &yaw00_lev0_p02_classic,
+    &yaw00_lev0_p03_classic,
+    &yaw00_lev0_p04_classic,
+    &yaw00_lev0_p05_classic,
+    &yaw00_lev0_p06_classic,
+    &yaw00_lev0_p07_classic,
+    &yaw00_lev0_p08_classic,
+    &yaw00_lev0_p09_classic,
+    &yaw00_lev0_p10_classic,
+    &yaw00_lev1_p00_classic,
+    &yaw00_lev1_p01_classic,
+    &yaw00_lev1_p02_classic,
+    &yaw00_lev1_p03_classic,
+    &yaw00_lev1_p04_classic,
+    &yaw00_lev1_p05_classic,
+    &yaw00_lev1_p06_classic,
+    &yaw00_lev1_p07_classic,
+    &yaw00_lev1_p08_classic,
+    &yaw00_lev1_p09_classic,
+    &yaw00_lev1_p10_classic,
+    &yaw00_lev2_p00_classic,
+    &yaw00_lev2_p01_classic,
+    &yaw00_lev2_p02_classic,
+    &yaw00_lev2_p03_classic,
+    &yaw00_lev2_p04_classic,
+    &yaw00_lev2_p05_classic,
+    &yaw00_lev2_p06_classic,
+    &yaw00_lev2_p07_classic,
+    &yaw00_lev2_p08_classic,
+    &yaw00_lev2_p09_classic,
+    &yaw00_lev2_p10_classic,
+    &yaw00_lev3_p00_classic,
+    &yaw00_lev3_p01_classic,
+    &yaw00_lev3_p02_classic,
+    &yaw00_lev3_p03_classic,
+    &yaw00_lev3_p04_classic,
+    &yaw00_lev3_p05_classic,
+    &yaw00_lev3_p06_classic,
+    &yaw00_lev3_p07_classic,
+    &yaw00_lev3_p08_classic,
+    &yaw00_lev3_p09_classic,
+    &yaw00_lev3_p10_classic
+};
+
+} // namespace stasm
+#endif // STASM_YAW00_MH
