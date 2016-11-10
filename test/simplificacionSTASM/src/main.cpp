@@ -99,8 +99,8 @@ Mat leerShapeFile( const char* _filename ){
 
 /**
 * Función que selecciona los puntos utilizables tras la simplificación. Para ello, aplica el
-* algoritmo de Douglas Peucker a todas las entradas y selecciona aquella que mantiene MÁS puntos
-* tras la simplificación.
+* algoritmo de Douglas Peucker a una de las entradas (indicada por la variable 'indice') se
+*	obtiene una lista de los índices que hay que retener tras la simplificación.
 *	Se devuelven los índices de los puntos utilizables según esta simplificación. En caso de error en 
 * el proceso se devuelve el vector vacío.
 **/
@@ -109,24 +109,18 @@ vector<int> obtener_indices(const Mat& _puntos, const double _epsilon){
 	**	Variables necesarias	**
 	***************************/
 	int indice = 0; // Indice de la entrada con el mayor número de puntos tras la simplificación.
-	int numPuntos = 0;	// Variable usada para calcular el máximo.
-	int maxPuntos = 0;	// Variable usada para calcular el máximo.
 	vector<int> indices;
 	Mat puntos_simplificados;
+	
+	// Si el valor de epsilon es erroneo, se devuelve el vector vacío.
+	if( _epsilon <= 0.0 )
+		return indices;
 	
 	/***************************
 	**	Cuerpo de la función	**
 	***************************/
-	// Obtengo la entrada que mantiene más puntos tras la simplificación.
-	for( int i = 0; i < _puntos.cols; i++ ){
-		numPuntos = douglasPeucker( _puntos.col( i ), _epsilon ).rows;
-		if( numPuntos > maxPuntos ){
-			maxPuntos = numPuntos;
-			indice = i;
-		}
-	}
 	
-	// Almaceno la simplificación de puntos con mayor número de puntos.
+	// Almaceno la simplificación de puntos de la entrada 'indice'.
 	puntos_simplificados = douglasPeucker( _puntos.col( indice ), _epsilon );
 	
 	// Busco y almaceno los índices de puntos que estan antes y después de la simplificación.
@@ -361,11 +355,15 @@ bool modificarStasmLibFile( const int _num_landmarks ){
 
 // Programa principal.
 int main( int argc, char** argv ){
+	if( argc != 2 ){
+		cerr << "Falta indicar el parámetro 'epsilon' como argumento" << endl;
+		return 1;
+	}
 	/***************************
 	**	Variables necesarias	**
 	***************************/
 	const char* nombre_shapefile = "../lib/STASM_handsSimplificado/tasm/shapes/hands.shape";
-	const double epsilon = 100.0; // Parámetro del algoritmo de Douglas Peucker.
+	const double epsilon = atof( argv[1] ); // Parámetro del algoritmo de Douglas Peucker.
 	Mat shapefile_points; // Matriz donde se leen los puntos del fichero.
 	vector<int> puntos_utilizables; // Indices de los puntos utilizables tras la simplificación.
 	vector<string> nombre_imagenes; // Nombres de las imagenes utilizadas en el fichero.

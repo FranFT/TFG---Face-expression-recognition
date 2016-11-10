@@ -1,4 +1,4 @@
-// yaw00.mh: list of ASM descriptor models (machine generated from a 11 point landmark table)
+// yaw00.mh: list of ASM descriptor models (machine generated from a 23 point landmark table)
 //
 // Command: tasm -d ../lib/STASM_handsSimplificado/stasm/MOD_1 ../lib/STASM_handsSimplificado/tasm/shapes/hands_simplificado.shape
 // STASM_VERSION "4.1.0"
@@ -40,6 +40,18 @@
 #include "mh/yaw00_lev0_p08_classic.mh"
 #include "mh/yaw00_lev0_p09_classic.mh"
 #include "mh/yaw00_lev0_p10_classic.mh"
+#include "mh/yaw00_lev0_p11_classic.mh"
+#include "mh/yaw00_lev0_p12_classic.mh"
+#include "mh/yaw00_lev0_p13_classic.mh"
+#include "mh/yaw00_lev0_p14_classic.mh"
+#include "mh/yaw00_lev0_p15_classic.mh"
+#include "mh/yaw00_lev0_p16_classic.mh"
+#include "mh/yaw00_lev0_p17_classic.mh"
+#include "mh/yaw00_lev0_p18_classic.mh"
+#include "mh/yaw00_lev0_p19_classic.mh"
+#include "mh/yaw00_lev0_p20_classic.mh"
+#include "mh/yaw00_lev0_p21_classic.mh"
+#include "mh/yaw00_lev0_p22_classic.mh"
 #include "mh/yaw00_lev1_p00_classic.mh"
 #include "mh/yaw00_lev1_p01_classic.mh"
 #include "mh/yaw00_lev1_p02_classic.mh"
@@ -51,6 +63,18 @@
 #include "mh/yaw00_lev1_p08_classic.mh"
 #include "mh/yaw00_lev1_p09_classic.mh"
 #include "mh/yaw00_lev1_p10_classic.mh"
+#include "mh/yaw00_lev1_p11_classic.mh"
+#include "mh/yaw00_lev1_p12_classic.mh"
+#include "mh/yaw00_lev1_p13_classic.mh"
+#include "mh/yaw00_lev1_p14_classic.mh"
+#include "mh/yaw00_lev1_p15_classic.mh"
+#include "mh/yaw00_lev1_p16_classic.mh"
+#include "mh/yaw00_lev1_p17_classic.mh"
+#include "mh/yaw00_lev1_p18_classic.mh"
+#include "mh/yaw00_lev1_p19_classic.mh"
+#include "mh/yaw00_lev1_p20_classic.mh"
+#include "mh/yaw00_lev1_p21_classic.mh"
+#include "mh/yaw00_lev1_p22_classic.mh"
 #include "mh/yaw00_lev2_p00_classic.mh"
 #include "mh/yaw00_lev2_p01_classic.mh"
 #include "mh/yaw00_lev2_p02_classic.mh"
@@ -62,6 +86,18 @@
 #include "mh/yaw00_lev2_p08_classic.mh"
 #include "mh/yaw00_lev2_p09_classic.mh"
 #include "mh/yaw00_lev2_p10_classic.mh"
+#include "mh/yaw00_lev2_p11_classic.mh"
+#include "mh/yaw00_lev2_p12_classic.mh"
+#include "mh/yaw00_lev2_p13_classic.mh"
+#include "mh/yaw00_lev2_p14_classic.mh"
+#include "mh/yaw00_lev2_p15_classic.mh"
+#include "mh/yaw00_lev2_p16_classic.mh"
+#include "mh/yaw00_lev2_p17_classic.mh"
+#include "mh/yaw00_lev2_p18_classic.mh"
+#include "mh/yaw00_lev2_p19_classic.mh"
+#include "mh/yaw00_lev2_p20_classic.mh"
+#include "mh/yaw00_lev2_p21_classic.mh"
+#include "mh/yaw00_lev2_p22_classic.mh"
 #include "mh/yaw00_lev3_p00_classic.mh"
 #include "mh/yaw00_lev3_p01_classic.mh"
 #include "mh/yaw00_lev3_p02_classic.mh"
@@ -73,6 +109,18 @@
 #include "mh/yaw00_lev3_p08_classic.mh"
 #include "mh/yaw00_lev3_p09_classic.mh"
 #include "mh/yaw00_lev3_p10_classic.mh"
+#include "mh/yaw00_lev3_p11_classic.mh"
+#include "mh/yaw00_lev3_p12_classic.mh"
+#include "mh/yaw00_lev3_p13_classic.mh"
+#include "mh/yaw00_lev3_p14_classic.mh"
+#include "mh/yaw00_lev3_p15_classic.mh"
+#include "mh/yaw00_lev3_p16_classic.mh"
+#include "mh/yaw00_lev3_p17_classic.mh"
+#include "mh/yaw00_lev3_p18_classic.mh"
+#include "mh/yaw00_lev3_p19_classic.mh"
+#include "mh/yaw00_lev3_p20_classic.mh"
+#include "mh/yaw00_lev3_p21_classic.mh"
+#include "mh/yaw00_lev3_p22_classic.mh"
 
 namespace stasm
 {
@@ -90,6 +138,18 @@ static const BaseDescMod* YAW00_DESCMODS[] =
     &yaw00_lev0_p08_classic,
     &yaw00_lev0_p09_classic,
     &yaw00_lev0_p10_classic,
+    &yaw00_lev0_p11_classic,
+    &yaw00_lev0_p12_classic,
+    &yaw00_lev0_p13_classic,
+    &yaw00_lev0_p14_classic,
+    &yaw00_lev0_p15_classic,
+    &yaw00_lev0_p16_classic,
+    &yaw00_lev0_p17_classic,
+    &yaw00_lev0_p18_classic,
+    &yaw00_lev0_p19_classic,
+    &yaw00_lev0_p20_classic,
+    &yaw00_lev0_p21_classic,
+    &yaw00_lev0_p22_classic,
     &yaw00_lev1_p00_classic,
     &yaw00_lev1_p01_classic,
     &yaw00_lev1_p02_classic,
@@ -101,6 +161,18 @@ static const BaseDescMod* YAW00_DESCMODS[] =
     &yaw00_lev1_p08_classic,
     &yaw00_lev1_p09_classic,
     &yaw00_lev1_p10_classic,
+    &yaw00_lev1_p11_classic,
+    &yaw00_lev1_p12_classic,
+    &yaw00_lev1_p13_classic,
+    &yaw00_lev1_p14_classic,
+    &yaw00_lev1_p15_classic,
+    &yaw00_lev1_p16_classic,
+    &yaw00_lev1_p17_classic,
+    &yaw00_lev1_p18_classic,
+    &yaw00_lev1_p19_classic,
+    &yaw00_lev1_p20_classic,
+    &yaw00_lev1_p21_classic,
+    &yaw00_lev1_p22_classic,
     &yaw00_lev2_p00_classic,
     &yaw00_lev2_p01_classic,
     &yaw00_lev2_p02_classic,
@@ -112,6 +184,18 @@ static const BaseDescMod* YAW00_DESCMODS[] =
     &yaw00_lev2_p08_classic,
     &yaw00_lev2_p09_classic,
     &yaw00_lev2_p10_classic,
+    &yaw00_lev2_p11_classic,
+    &yaw00_lev2_p12_classic,
+    &yaw00_lev2_p13_classic,
+    &yaw00_lev2_p14_classic,
+    &yaw00_lev2_p15_classic,
+    &yaw00_lev2_p16_classic,
+    &yaw00_lev2_p17_classic,
+    &yaw00_lev2_p18_classic,
+    &yaw00_lev2_p19_classic,
+    &yaw00_lev2_p20_classic,
+    &yaw00_lev2_p21_classic,
+    &yaw00_lev2_p22_classic,
     &yaw00_lev3_p00_classic,
     &yaw00_lev3_p01_classic,
     &yaw00_lev3_p02_classic,
@@ -122,7 +206,19 @@ static const BaseDescMod* YAW00_DESCMODS[] =
     &yaw00_lev3_p07_classic,
     &yaw00_lev3_p08_classic,
     &yaw00_lev3_p09_classic,
-    &yaw00_lev3_p10_classic
+    &yaw00_lev3_p10_classic,
+    &yaw00_lev3_p11_classic,
+    &yaw00_lev3_p12_classic,
+    &yaw00_lev3_p13_classic,
+    &yaw00_lev3_p14_classic,
+    &yaw00_lev3_p15_classic,
+    &yaw00_lev3_p16_classic,
+    &yaw00_lev3_p17_classic,
+    &yaw00_lev3_p18_classic,
+    &yaw00_lev3_p19_classic,
+    &yaw00_lev3_p20_classic,
+    &yaw00_lev3_p21_classic,
+    &yaw00_lev3_p22_classic
 };
 
 } // namespace stasm
