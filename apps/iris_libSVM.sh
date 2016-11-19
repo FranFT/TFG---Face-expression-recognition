@@ -7,9 +7,7 @@ source ../data/info.sh
 # haciendo uso de iris dataset.                                #
 ################################################################
 
-# Creo el directorio de salida y me sitúo en él.
-mkdir -p ../$IRIS_LIBSVM_BUILD_DIR
-cd ../$IRIS_LIBSVM_BUILD_DIR
+INDICE=`basename "$0"`
+INDICE="${INDICE%.*}"
 
-# Compilo la aplicación.
-cmake $IRIS_LIBSVM_SOURCE_DIR && make
+./$BUILD_APP $INDICE TEST

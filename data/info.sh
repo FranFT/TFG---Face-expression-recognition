@@ -4,103 +4,121 @@
 # Descripción: Contiene las variables necesarias para cada script.#
 ###################################################################
 
+BUILD_APP=build.sh
+
+declare -A BUILD_DIR
+declare -A LIB_DIR
+declare -A LOG_DIR
+declare -A SOURCE_DIR
+declare -A SHAPEFILE
+
 #############
 ### STASM ###
 #############
-# Directorios.
-BUILD_DIR_STASM=buildSTASM
-LIB_DIR_STASM=../lib/STASM
-LOG_DIR_STASM=lib/STASM/stasm/MOD_1/log/
+BUILD_DIR[STASM]=buildSTASM
+LIB_DIR[STASM]=../lib/STASM
+LOG_DIR[STASM]=lib/STASM/stasm/MOD_1/log/
+#SOURCE_DIR[0]=' '
 
 
 ##################
 ### STASM_cars ###
 ##################
-# Directorios.
-BUILD_DIR_CARS=buildCars
-LIB_DIR_CARS=../lib/STASM_cars
-LOG_DIR_CARS=lib/STASM_cars/stasm/MOD_1/log/
+BUILD_DIR[STASM_cars]=buildCars
+LIB_DIR[STASM_cars]=../lib/STASM_cars
+LOG_DIR[STASM_cars]=lib/STASM_cars/stasm/MOD_1/log/
+#SOURCE_DIR[1]=' '
 
-# Ficheros.
-#CARS_SHAPEFILE="cars1.shape"
-CARS_SHAPEFILE="cars1.shape"
+# Ficheros
+SHAPEFILE[STASM_cars]="cars1.shape"
 
 
 ###################
 ### STASM_hands ###
 ###################
-# Directorios.
-BUILD_DIR_HANDS=buildHands
-LIB_DIR_HANDS=../lib/STASM_hands
-LOG_DIR_HANDS=lib/STASM_hands/stasm/MOD_1/log/
+BUILD_DIR[STASM_hands]=buildHands
+LIB_DIR[STASM_hands]=../lib/STASM_hands
+LOG_DIR[STASM_hands]=lib/STASM_hands/stasm/MOD_1/log/
+#SOURCE_DIR[2]=' '
 
 # Ficheros.
-HANDS_SHAPEFILE="hands.shape"
+SHAPEFILE[STASM_hands]="hands.shape"
 
-
-####################
-### asmlib-opencv###
-####################
-# Directorios.
-BUILD_DIR_ASMLIB=buildASMLIB
-LIB_DIR_ASMLIB=../lib/asmlib-opencv-master/src/
+#####################
+### asmlib-opencv ###
+#####################
+BUILD_DIR[asmlib-opencv]=buildASMLIB
+#LIB_DIR[asmlib-opencv]=../lib/asmlib-opencv-master/src/
+#LOG_DIR[asmlib-opencv]=' '
+SOURCE_DIR[asmlib-opencv]=../lib/asmlib-opencv-master/src/
 
 
 #####################
 ### detectarManos ###
 #####################
-# Directorios.
-DETECTAR_MANOS_BUILD_DIR=buildDetectarManos
-DETECTAR_MANOS_SOURCE_DIR=../test/detectarManos
+BUILD_DIR[detectarManos]=buildDetectarManos
+#LIB_DIR[4]=' '
+#LOG_DIR[4]=' '
+SOURCE_DIR[detectarManos]=../test/detectarManos
+
+
+#################################
+### detectarManosSimplificado ###
+#################################
+BUILD_DIR[detectarManosSimplificado]=buildDetectarManosSimplificado
+#LIB_DIR[5]=
+#LOG_DIR[5]=
+SOURCE_DIR[detectarManosSimplificado]=../test/detectarManosSimplificado
 
 
 ######################
 ### detectarCoches ###
 ######################
-# Directorios.
-DETECTAR_COCHES_BUILD_DIR=buildDetectarCoches
-DETECTAR_COCHES_SOURCE_DIR=../test/detectarCoches
+BUILD_DIR[detectarCoches]=buildDetectarCoches
+#LIB_DIR[6]=' '
+#LOG_DIR[6]=' '
+SOURCE_DIR[detectarCoches]=../test/detectarCoches
 
 
 ####################
 ### detectarCara ###
 ####################
-# Directorios.
-DETECTAR_CARA_BUILD_DIR=buildDetectarCara
-DETECTAR_CARA_SOURCE_DIR=../test/detectarCara
+BUILD_DIR[detectarCara]=buildDetectarCara
+#LIB_DIR[7]=
+#LOG_DIR[7]=
+SOURCE_DIR[detectarCara]=../test/detectarCara
 
 
-##################
-### IrisLibSVM ###
-##################
-# Directorios.
-IRIS_LIBSVM_BUILD_DIR=buildIrisLibSVM
-IRIS_LIBSVM_SOURCE_DIR=../test/iris_libSVM
+###################
+### iris_libSVM ###
+###################
+BUILD_DIR[iris_libSVM]=buildIrisLibSVM
+#LIB_DIR[8]=' '
+#LOG_DIR[8]=' '
+SOURCE_DIR[iris_libSVM]=../test/iris_libSVM
 
 
 ######################
-### DouglasPeucker ###
+### douglasPeucker ###
 ######################
-# Directorios.
-DOUGLAS_PEUCKER_BUILD_DIR=buildDouglasPeucker
-DOUGLAS_PEUCKER_SOURCE_DIR=../test/douglasPeucker
+BUILD_DIR[douglasPeucker]=buildDouglasPeucker
+#LIB_DIR[9]=' '
+#LOG_DIR[9]=' '
+SOURCE_DIR[douglasPeucker]=../test/douglasPeucker
 
 
 ###########################
 ### simplificacionSTASM ###
 ###########################
-# Directorios.
-# Libreria simplificada.
-BUILD_DIR_HANDS_SIMPLIFICADO=buildSTASM_handsSimplificado
-LIB_DIR_HANDS_SIMPLIFICADO=../lib/STASM_handsSimplificado
-LOG_DIR_HANDS_SIMPLIFICADO=lib/STASM_handsSimplificado/stasm/MOD_1/log/
+# Librería simplificada.
+BUILD_DIR[STASM_handsSimplificado]=buildSTASM_handsSimplificado
+LIB_DIR[STASM_handsSimplificado]=../lib/STASM_handsSimplificado
+LOG_DIR[STASM_handsSimplificado]=lib/STASM_handsSimplificado/stasm/MOD_1/log/
+#SOURCE_DIR[10]=' '
+
 
 # Aplicación que simplifica.
-SIMPLIFICACION_STASM_BUILD_DIR=buildSimplificacionSTASM
-SIMPLIFICACION_STASM_SOURCE_DIR=../test/simplificacionSTASM
-
-
-
-
-
-
+BUILD_DIR[simplificacionSTASM]=buildSimplificacionSTASM
+#LIB_DIR[11]=' '
+#LOG_DIR[11]=' '
+SOURCE_DIR[simplificacionSTASM]=../test/simplificacionSTASM

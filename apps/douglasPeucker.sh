@@ -8,9 +8,7 @@ source ../data/info.sh
 # https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm #
 #################################################################################
 
-# Creo el directorio de salida y me sitúo en él.
-mkdir -p ../$DOUGLAS_PEUCKER_BUILD_DIR
-cd ../$DOUGLAS_PEUCKER_BUILD_DIR
+INDICE=`basename "$0"`
+INDICE="${INDICE%.*}"
 
-# Compilo la aplicación.
-cmake $DOUGLAS_PEUCKER_SOURCE_DIR && make
+./$BUILD_APP $INDICE TEST
