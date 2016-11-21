@@ -4,7 +4,10 @@
 
 # Directorios
 doc/
-build/
+build*/
+lib/**/mh
+# Ficheros .mh
+*.mh
 
 # Prerequisites
 *.d
