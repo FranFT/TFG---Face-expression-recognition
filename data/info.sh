@@ -122,3 +122,9 @@ BUILD_DIR[simplificacionSTASM]=buildSimplificacionSTASM
 #LIB_DIR[11]=' '
 #LOG_DIR[11]=' '
 SOURCE_DIR[simplificacionSTASM]=../test/simplificacionSTASM
+
+# Ejemplo de Caffe.
+BUILD_DIR[ejemploCaffe]=buildEjemploCaffe
+#LIB_DIR[11]=' '
+#LOG_DIR[11]=' '
+SOURCE_DIR[ejemploCaffe]=../test/ejemploCaffe
