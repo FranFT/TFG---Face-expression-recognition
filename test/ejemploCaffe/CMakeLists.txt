@@ -4,9 +4,9 @@ SET(PROJ_NAME					"ejemploCaffe"	)
 SET(PROJ_PATH					${CMAKE_SOURCE_DIR}	)
 SET(PROJ_OUT_PATH			${CMAKE_BINARY_DIR}	)
 
-# Caffe-files
-SET(Caffe_INCLUDE_DIRS "/home/fran/caffe-master/include/;/home/fran/caffe-master/;")
-SET(Caffe_LIBRARIES "/home/fran/caffe-master/build/lib/libcaffe.so")
+# Caffe and CUDA files path
+SET(Caffe_INCLUDE_DIRS "/usr/local/caffe/include/;/usr/local/caffe/;/usr/local/cuda-8.0/include")
+SET(Caffe_LIBRARIES "/usr/local/caffe/build/lib/libcaffe.so")
 
 # Genero el ejecutable.
 PROJECT( ${PROJ_NAME} )
