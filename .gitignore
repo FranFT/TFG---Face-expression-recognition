@@ -3,6 +3,7 @@
 ##########################
 
 # Directorios
+res/yalefaces
 doc/
 build*/
 lib/**/mh
