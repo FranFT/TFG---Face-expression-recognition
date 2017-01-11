@@ -18,7 +18,7 @@ declare -A SHAPEFILE
 BUILD_DIR[STASM]=buildSTASM
 LIB_DIR[STASM]=../lib/STASM
 LOG_DIR[STASM]=lib/STASM/stasm/MOD_1/log/
-#SOURCE_DIR[0]=' '
+#SOURCE_DIR[]=' '
 
 
 ##################
@@ -27,7 +27,7 @@ LOG_DIR[STASM]=lib/STASM/stasm/MOD_1/log/
 BUILD_DIR[STASM_cars]=buildCars
 LIB_DIR[STASM_cars]=../lib/STASM_cars
 LOG_DIR[STASM_cars]=lib/STASM_cars/stasm/MOD_1/log/
-#SOURCE_DIR[1]=' '
+#SOURCE_DIR[]=' '
 
 # Ficheros
 SHAPEFILE[STASM_cars]="cars1.shape"
@@ -39,7 +39,7 @@ SHAPEFILE[STASM_cars]="cars1.shape"
 BUILD_DIR[STASM_hands]=buildHands
 LIB_DIR[STASM_hands]=../lib/STASM_hands
 LOG_DIR[STASM_hands]=lib/STASM_hands/stasm/MOD_1/log/
-#SOURCE_DIR[2]=' '
+#SOURCE_DIR[]=' '
 
 # Ficheros.
 SHAPEFILE[STASM_hands]="hands.shape"
@@ -57,8 +57,8 @@ SOURCE_DIR[asmlib-opencv]=../lib/asmlib-opencv-master/src/
 ### detectarManos ###
 #####################
 BUILD_DIR[detectarManos]=buildDetectarManos
-#LIB_DIR[4]=' '
-#LOG_DIR[4]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[detectarManos]=../test/detectarManos
 
 
@@ -66,8 +66,8 @@ SOURCE_DIR[detectarManos]=../test/detectarManos
 ### detectarManosSimplificado ###
 #################################
 BUILD_DIR[detectarManosSimplificado]=buildDetectarManosSimplificado
-#LIB_DIR[5]=
-#LOG_DIR[5]=
+#LIB_DIR[]=
+#LOG_DIR[]=
 SOURCE_DIR[detectarManosSimplificado]=../test/detectarManosSimplificado
 
 
@@ -75,8 +75,8 @@ SOURCE_DIR[detectarManosSimplificado]=../test/detectarManosSimplificado
 ### detectarCoches ###
 ######################
 BUILD_DIR[detectarCoches]=buildDetectarCoches
-#LIB_DIR[6]=' '
-#LOG_DIR[6]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[detectarCoches]=../test/detectarCoches
 
 
@@ -84,8 +84,8 @@ SOURCE_DIR[detectarCoches]=../test/detectarCoches
 ### detectarCara ###
 ####################
 BUILD_DIR[detectarCara]=buildDetectarCara
-#LIB_DIR[7]=
-#LOG_DIR[7]=
+#LIB_DIR[]=
+#LOG_DIR[]=
 SOURCE_DIR[detectarCara]=../test/detectarCara
 
 
@@ -93,8 +93,8 @@ SOURCE_DIR[detectarCara]=../test/detectarCara
 ### iris_libSVM ###
 ###################
 BUILD_DIR[iris_libSVM]=buildIrisLibSVM
-#LIB_DIR[8]=' '
-#LOG_DIR[8]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[iris_libSVM]=../test/iris_libSVM
 
 
@@ -102,8 +102,8 @@ SOURCE_DIR[iris_libSVM]=../test/iris_libSVM
 ### douglasPeucker ###
 ######################
 BUILD_DIR[douglasPeucker]=buildDouglasPeucker
-#LIB_DIR[9]=' '
-#LOG_DIR[9]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[douglasPeucker]=../test/douglasPeucker
 
 
@@ -114,17 +114,23 @@ SOURCE_DIR[douglasPeucker]=../test/douglasPeucker
 BUILD_DIR[STASM_handsSimplificado]=buildSTASM_handsSimplificado
 LIB_DIR[STASM_handsSimplificado]=../lib/STASM_handsSimplificado
 LOG_DIR[STASM_handsSimplificado]=lib/STASM_handsSimplificado/stasm/MOD_1/log/
-#SOURCE_DIR[10]=' '
+#SOURCE_DIR[]=' '
 
 
 # Aplicación que simplifica.
 BUILD_DIR[simplificacionSTASM]=buildSimplificacionSTASM
-#LIB_DIR[11]=' '
-#LOG_DIR[11]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[simplificacionSTASM]=../test/simplificacionSTASM
 
 # Ejemplo de Caffe.
 BUILD_DIR[ejemploCaffe]=buildEjemploCaffe
-#LIB_DIR[11]=' '
-#LOG_DIR[11]=' '
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
 SOURCE_DIR[ejemploCaffe]=../test/ejemploCaffe
+
+# Ejemplo dataPreprocessing
+BUILD_DIR[dataPreprocessing]=buildDataPreprocessing
+#LIB_DIR[]=' '
+#LOG_DIR[]=' '
+SOURCE_DIR[dataPreprocessing]=../test/dataPreprocessing
