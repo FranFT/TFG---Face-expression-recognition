@@ -49,10 +49,27 @@ clear
 INDICE=`basename "$0"`
 INDICE="${INDICE%.*}"
 
+#############################
+# building dataPreprocesing #
+#############################
+echo "." && echo ".." && echo "..."
+echo "====================================="
+echoY "... BUILDING \"$INDICE\"..."
+echo "====================================="
+
 ./$BUILD_APP $INDICE TEST
 
 # Creating training and test directories if they doesnt exist
 cd ../${BUILD_DIR[$INDICE]} # Switching to build directory
+
+# Checking if build succeeded
+if [ ! -f $INDICE ]; then
+  echo " " && echo " "
+  echoR "Building \"$INDICE\" FAILED"
+  echoY "Exiting script..."
+  cd .. && ./clean.sh
+  exit 1
+fi
 
 if [ -d $DATA_DIR ]; # Data dir reset.
 then
@@ -72,7 +89,6 @@ echo "====================================="
 ./$INDICE
 # Checking if 'dataPreprocesing' succeeded
 if [ $? -eq 0 ]; then
-  echo " " && echo " "
   echoG "Execution of \"$INDICE\" ended SUCCESSFULLY."
 else
   echoR "Execution of \"$INDICE\" ended FAILED."

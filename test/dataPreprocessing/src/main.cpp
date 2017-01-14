@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include <sstream>
 #include <opencv2/opencv.hpp>
 #include "utilidades.h"
 #include "infoBaseDatos.h"
@@ -19,10 +20,15 @@ using namespace cv;
  */
 #define TRAINING_SAMPLE_SIZE 0.7
 
-/**
+/***************
  * Functions
- */
+ **************/
 
+String getSubjectName( const int _sub, String _expr){
+  ostringstream conversor;
+  conversor << "subject" << _sub << "." << _expr << ".png";
+  return conversor.str();
+}
 /**
  * This method calculates which sample element is in the training sample.
  */
@@ -43,15 +49,13 @@ vector<bool> getTrainingSample( const infoBaseDatos* _data_base ){
   return output_vector;
 }// getTrainingSample ends.
 
-/**
- * [main description]
- * @return [description]
- */
+
 int main(){
   /*
    Variables
    */
   Mat image;
+  String dest, training_path, test_path;
   infoBaseDatos* data_base;
   vector<bool> is_training;
 
@@ -60,11 +64,33 @@ int main(){
    */
   // Data inicialitation
   srand(time(NULL));
+  training_path = "data/training/";
+  test_path = "data/test/";
   data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
 
-  for( int i=0; i<is_training.size(); i++)
-    cout << is_training.at(i) << ", ";
-  cout << endl;
+  // Applying random transformations to each training image.
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
+    for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
+      if( leeimagen( data_base->construir_path( i, j ), image ) ){
+        if( is_training.at( i ) ){
+          /**
+           * Do some random transformations
+           */
+        }
+        else{
+          //cout <<  getSubjectName( i , data_base->get_expresion( j ) ) << endl;
+          imwrite( test_path + getSubjectName( i , data_base->get_expresion( j ) ), image );
+        }// if-else: is_training
+      }// if
+      else{
+        cerr << "Error while trying to read: "
+        << data_base->construir_path( i, j ) << endl;
+        return 1;
+      }// if-else: leeimagen.
+    }// for
+  }// for
+
+  return 0;
 
 }// Main ends.

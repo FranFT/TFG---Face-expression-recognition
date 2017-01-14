@@ -18,7 +18,7 @@ cd ../${BUILD_DIR[$1]}
 # Se actua en función del segundo parámetro.
 case $2 in
 
-	STASM) 
+	STASM)
 		# Compilo la build de la librería necesaria.
 		cmake ${LIB_DIR[$1]} && make
 		;;
@@ -40,13 +40,13 @@ case $1 in
 		# Vuelvo a compilar los ejecutables con el nuevo modelo.
 		make
 		;;
-		
-	asmlib-opencv) 
+
+	asmlib-opencv)
 		# Creo el scrip para ejecutar la demo.
 		echo "./demo/demo -pc -m ../lib/asmlib-opencv-master/data/muct76.model -f -C ../data/haarcascade_frontalface_alt2.xml" > ejecutarDemo.sh
 		chmod +x ejecutarDemo.sh
 		;;
-	
+
 	*) echo "Caso por defecto"
 		;;
 esac
