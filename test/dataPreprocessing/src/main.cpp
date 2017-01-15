@@ -23,12 +23,18 @@ using namespace cv;
 /***************
  * Functions
  **************/
-
+/**
+ * Assing a name to a given subject-expression pair.
+ * @param  _sub  Subject index in data base.
+ * @param  _expr Subject's expression index in data base.
+ * @return       Subject name
+ */
 String getSubjectName( const int _sub, String _expr){
   ostringstream conversor;
-  conversor << "subject" << _sub << "." << _expr << ".png";
+  conversor << "subject" << _sub << "." << _expr;
   return conversor.str();
-}
+}// getSubjectName
+
 /**
  * This method calculates which sample element is in the training sample.
  */
@@ -49,13 +55,24 @@ vector<bool> getTrainingSample( const infoBaseDatos* _data_base ){
   return output_vector;
 }// getTrainingSample ends.
 
+/**
+ * Write the mirror image.
+ * @param _image Image to be flipped.
+ * @param _pathname  Image path to be saved (without format).
+ */
+void horizontalFlip(const Mat& _image, const String _pathname){
+  Mat flipped_image;
+  flip( _image, flipped_image, 1 );
+  imwrite( _pathname + "1.png", flipped_image );
+}// horizontalFlip
+
 
 int main(){
   /*
    Variables
    */
   Mat image;
-  String dest, training_path, test_path;
+  String subject_name, training_path, test_path;
   infoBaseDatos* data_base;
   vector<bool> is_training;
 
@@ -73,14 +90,22 @@ int main(){
   for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
     for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
       if( leeimagen( data_base->construir_path( i, j ), image ) ){
+        // Assign subject name
+        subject_name = getSubjectName( i , data_base->get_expresion( j ) );
         if( is_training.at( i ) ){
+          // Writing original image to test folder.
+          imwrite( training_path + subject_name + ".png", image );
           /**
            * Do some random transformations
            */
+          // If expression is 'leftlight' or 'rightlight' its not needed to do horizontalFlip.
+          if( j != 3 && j != 6)
+            horizontalFlip( image, training_path + subject_name );
+
         }
         else{
-          //cout <<  getSubjectName( i , data_base->get_expresion( j ) ) << endl;
-          imwrite( test_path + getSubjectName( i , data_base->get_expresion( j ) ), image );
+          // Writing image to test folder.
+          imwrite( test_path + subject_name + ".png", image );
         }// if-else: is_training
       }// if
       else{
