@@ -58,20 +58,22 @@ vector<bool> getTrainingSample( const infoBaseDatos* _data_base ){
 /**
  * Write the mirror image.
  * @param _image Image to be flipped.
- * @param _pathname  Image path to be saved (without format).
  */
-void horizontalFlip(const Mat& _image, const String _pathname){
+Mat horizontalFlip(const Mat& _image){
   Mat flipped_image;
   flip( _image, flipped_image, 1 );
-  imwrite( _pathname + "1.png", flipped_image );
+  return flipped_image;
 }// horizontalFlip
-
+/**
+ * Rotaciones, traslaciones
+ */
 
 int main(){
   /*
    Variables
    */
   Mat image;
+  vector<vector<pair< Mat, String> > > images;
   String subject_name, training_path, test_path;
   infoBaseDatos* data_base;
   vector<bool> is_training;
@@ -86,34 +88,35 @@ int main(){
   data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
 
-  // Applying random transformations to each training image.
-  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
-    for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
-      if( leeimagen( data_base->construir_path( i, j ), image ) ){
-        // Assign subject name
-        subject_name = getSubjectName( i , data_base->get_expresion( j ) );
-        if( is_training.at( i ) ){
-          // Writing original image to test folder.
-          imwrite( training_path + subject_name + ".png", image );
-          /**
-           * Do some random transformations
-           */
-          // If expression is 'leftlight' or 'rightlight' its not needed to do horizontalFlip.
-          if( j != 3 && j != 6)
-            horizontalFlip( image, training_path + subject_name );
+  // Allocating memmory
+  images = vector<vector<pair< Mat, String> > >( data_base->get_num_sujetos() );
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ )
+    images.at( i ) = vector<pair< Mat, String > >( data_base->get_num_expresiones() );
 
-        }
-        else{
-          // Writing image to test folder.
-          imwrite( test_path + subject_name + ".png", image );
-        }// if-else: is_training
-      }// if
+  // Reading images
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++)
+    for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++)
+      if( leeimagen( data_base->construir_path( i, j ), image ) )
+        images[i][j] = make_pair( image, getSubjectName( i, data_base->get_expresion( j ) ) );
       else{
         cerr << "Error while trying to read: "
         << data_base->construir_path( i, j ) << endl;
         return 1;
       }// if-else: leeimagen.
-    }// for
+
+
+  // Applying random transformations to each training image.
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
+    if( is_training.at( i ) ){
+      for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
+        //
+        // Do some transformations
+        //
+        // If expression is 'leftlight' or 'rightlight' its not needed to do horizontalFlip.
+        if( j != 3 && j != 6)
+          images[i].push_back( make_pair( horizontalFlip( image ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+      }// for
+    }// if
   }// for
 
   return 0;
