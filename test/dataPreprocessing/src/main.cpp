@@ -68,6 +68,18 @@ Mat horizontalFlip(const Mat& _image){
  * Rotaciones, traslaciones
  */
 
+/**
+ * Zooms in an image keeping the same size.
+ * @param  _image Image to be zoomed in.
+ * @return        Zoomed in image.
+ */
+Mat randomZoom(const Mat& _image){
+  Mat zoomed_image;
+  Rect zoomed_area = Rect(0,0,_image.rows-250,_image.cols-250);
+  resize(_image(zoomed_area), zoomed_image, _image.size());
+  return zoomed_image;
+}
+
 int main(){
   /*
    Variables
