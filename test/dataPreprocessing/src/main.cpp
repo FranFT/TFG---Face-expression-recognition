@@ -74,8 +74,19 @@ Mat horizontalFlip(const Mat& _image){
  * @return        Zoomed in image.
  */
 Mat randomZoom(const Mat& _image){
+  // Variables //
+  int x, y;
+  float zoom_range = 0.2;
   Mat zoomed_image;
-  Rect zoomed_area = Rect(0,0,_image.rows-250,_image.cols-250);
+  Rect zoomed_area;
+
+  // Code //
+  // Defining the initial rect point.
+  x = ceil( _image.cols * zoom_range );
+  y = ceil( _image.rows * zoom_range );
+  zoomed_area = Rect( x, y, _image.cols - x, _image.rows - y );
+
+  // Zooming in while resizing the result image.
   resize(_image(zoomed_area), zoomed_image, _image.size());
   return zoomed_image;
 }
