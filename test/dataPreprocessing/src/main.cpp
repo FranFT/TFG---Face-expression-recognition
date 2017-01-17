@@ -73,18 +73,23 @@ Mat horizontalFlip(const Mat& _image){
  * @param  _image Image to be zoomed in.
  * @return        Zoomed in image.
  */
-Mat randomZoom(const Mat& _image){
+Mat randomZoom(const Mat& _image, int min_range = 20, int max_range = 50){
   // Variables //
   int x, y;
-  float zoom_range = 0.2;
+  float zoom_range;
   Mat zoomed_image;
   Rect zoomed_area;
 
   // Code //
+  // Defining a random zoom inside a [min,max] range.
+  zoom_range = ( rand() % (max_range - min_range + 1) ) + min_range;
+
   // Defining the initial rect point.
-  x = ceil( _image.cols * zoom_range );
-  y = ceil( _image.rows * zoom_range );
+  x = ceil( _image.cols / zoom_range );
+  y = ceil( _image.rows / zoom_range );
   zoomed_area = Rect( x, y, _image.cols - x, _image.rows - y );
+
+  cout << zoomed_area << endl;
 
   // Zooming in while resizing the result image.
   resize(_image(zoomed_area), zoomed_image, _image.size());
@@ -137,7 +142,7 @@ int main(){
         //
         // If expression is 'leftlight' or 'rightlight' its not needed to do horizontalFlip.
         if( j != 3 && j != 6)
-          images[i].push_back( make_pair( horizontalFlip( image ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+          images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
       }// for
     }// if
   }// for
