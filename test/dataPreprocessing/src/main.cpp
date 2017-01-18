@@ -77,7 +77,7 @@ Mat horizontalFlip(const Mat& _image){
  */
 Mat randomZoom(const Mat& _image, int min_range = 10, int max_range = 30){
   // Variables //
-  int x, y, anch, alt;
+  int x, y;
   float zoom_range;
   Mat zoomed_image;
   Rect zoomed_area;
