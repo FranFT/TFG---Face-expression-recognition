@@ -69,30 +69,32 @@ Mat horizontalFlip(const Mat& _image){
  */
 
 /**
- * Zooms in an image keeping the same size.
- * @param  _image Image to be zoomed in.
- * @return        Zoomed in image.
+ * Makes a random zoom-in within a range.
+ * @param  _image    Image to be zoomed.
+ * @param  min_range Minimun percentage of the picture to be zoomed in.
+ * @param  max_range Maximun percentage of the picture to be zoomed in.
+ * @return           Zoomed in image.
  */
-Mat randomZoom(const Mat& _image, int min_range = 20, int max_range = 50){
+Mat randomZoom(const Mat& _image, int min_range = 10, int max_range = 30){
   // Variables //
-  int x, y;
+  int x, y, anch, alt;
   float zoom_range;
   Mat zoomed_image;
   Rect zoomed_area;
 
   // Code //
-  // Defining a random zoom inside a [min,max] range.
+  // Defining a random zoom within a [min,max] range.
   zoom_range = ( rand() % (max_range - min_range + 1) ) + min_range;
+  zoom_range /= 100;
 
   // Defining the initial rect point.
-  x = ceil( _image.cols / zoom_range );
-  y = ceil( _image.rows / zoom_range );
+  x = _image.cols * zoom_range;
+  y = _image.rows * zoom_range;
   zoomed_area = Rect( x, y, _image.cols - x, _image.rows - y );
-
-  cout << zoomed_area << endl;
 
   // Zooming in while resizing the result image.
   resize(_image(zoomed_area), zoomed_image, _image.size());
+
   return zoomed_image;
 }
 
@@ -122,15 +124,18 @@ int main(){
     images.at( i ) = vector<pair< Mat, String > >( data_base->get_num_expresiones() );
 
   // Reading images
-  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++)
-    for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++)
-      if( leeimagen( data_base->construir_path( i, j ), image ) )
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
+    for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
+      if( leeimagen( data_base->construir_path( i, j ), image ) ){
         images[i][j] = make_pair( image, getSubjectName( i, data_base->get_expresion( j ) ) );
+      }
       else{
         cerr << "Error while trying to read: "
         << data_base->construir_path( i, j ) << endl;
         return 1;
       }// if-else: leeimagen.
+    }// for
+  }// for
 
 
   // Applying random transformations to each training image.
@@ -140,9 +145,8 @@ int main(){
         //
         // Do some transformations
         //
-        // If expression is 'leftlight' or 'rightlight' its not needed to do horizontalFlip.
-        if( j != 3 && j != 6)
-          images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+        images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+        images[i].push_back( make_pair( randomZoom( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
       }// for
     }// if
   }// for
