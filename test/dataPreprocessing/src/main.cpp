@@ -257,7 +257,8 @@ int main(){
     }// if
   }// for
 
-  normalizeImages( images, is_training );
+  if( !normalizeImages( images, is_training ) )
+    return 1;
 
 
   return 0;
