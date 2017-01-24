@@ -130,11 +130,83 @@ Mat randomRotate(const Mat& _image, int min_range = 5, int max_range = 40){
   return rotated_image;
 }
 
+bool normalizeImages( vector<vector<pair< Mat, String> > >& _images, const vector<bool>& _is_training ){
+  int _sub = 0;
+  int _channels = 0;
+  int _cont = 0;
+  bool _success = true;
+  Mat _mean, _stddev, _temp;
+  Size _siz;
+
+  // Select a training subject.
+  for( int i = 0; i < _is_training.size(); i++ )
+    if( _is_training[i] )
+      _sub = i;
+
+  // Save its features.
+  _siz = _images[_sub][0].first.size();
+  _channels = _images[_sub][0].first.channels();
+
+  // First step: Check all images in the training sample have same size and channels.
+  for( int i = 0; i < _images.size() && !_success; i++ )
+    if( _is_training[i] )
+      for( int j = 0; j < _images[i].size(); j++ )
+        if( _siz  != _images[i][j].first.size() || _channels != _images[i][j].first.channels() )
+          _success = false;
+
+  // Check if input is correct.
+  if( !_success ){
+    cerr << "ERROR: All images must be same size to normalize them." << endl;
+    _success = false;
+    return _success;
+  }
+  else if( _channels != 1 || _channels == 3 ){
+    cerr << "ERROR: Mats are not images. (Channels != 1 || Channels != 3 )" << endl;
+    _success = false;
+    return _success;
+  }
+
+  // Reserve space for mean and stddev matrix.
+  if( _channels == 1 ){
+    _mean = Mat::zeros( _images[_sub][0].first.size(), CV_32FC1 );
+    _stddev = Mat::zeros( _images[_sub][0].first.size(), CV_32FC1 );
+  }
+  else if( _channels == 3 ){
+    _mean = Mat::zeros( _images[_sub][0].first.size(), CV_32FC3 );
+    _stddev = Mat::zeros( _images[_sub][0].first.size(), CV_32FC3 );
+  }
+
+  // Calculate Mean matrix
+  for( int i = 0; i < _images.size(); i++ )
+    if( _is_training[i] )
+      for( int j = 0; j < _images[i].size(); j++, _cont++ )
+        _mean += _images[i][j].first;
+  _mean /= _cont;
+
+  // Calculate standard deviation matrix.
+  for( int i = 0; i < _images.size(); i++ )
+    if( _is_training[i] )
+      for( int j = 0; j < _images[i].size(); j++ ){
+        pow( _images[i][j].first - _mean, 2, _temp );
+        _stddev += _temp;
+      }
+  sqrt( _stddev / _cont - 1 , _stddev);
+
+  // Finally, once we got mean and standard deviation matrix we transform the set
+  // of images to a 0 mean - 1 variance set.
+  for( int i = 0; i < _images.size(); i++ )
+    if( _is_training[i] )
+      for( int j = 0; j < _images[i].size(); j++ )
+        _images[i][j].first = ( _images[i][j].first - _mean ) / _stddev;
+
+  return _success;
+}
+
 int main(){
   /*
    Variables
    */
-  Mat image;
+  Mat image, temp;
   vector<vector<pair< Mat, String> > > images;
   String subject_name, training_path, test_path;
   infoBaseDatos* data_base;
@@ -159,7 +231,8 @@ int main(){
   for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
     for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
       if( leeimagen( data_base->construir_path( i, j ), image ) ){
-        images[i][j] = make_pair( image, getSubjectName( i, data_base->get_expresion( j ) ) );
+        image.convertTo( temp, CV_32F );
+        images[i][j] = make_pair( temp, getSubjectName( i, data_base->get_expresion( j ) ) );
       }
       else{
         cerr << "Error while trying to read: "
@@ -179,10 +252,13 @@ int main(){
         //
         images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
         images[i].push_back( make_pair( randomZoom( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
-        images[i].push_back( make_pair( randomRotate( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+        //images[i].push_back( make_pair( randomRotate( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
       }// for
     }// if
   }// for
+
+  normalizeImages( images, is_training );
+
 
   return 0;
 
