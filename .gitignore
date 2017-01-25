@@ -4,6 +4,8 @@
 
 # Directorios
 caffe-master/*
+!caffe-master/custom
+
 res/yalefaces
 doc/
 build*/
