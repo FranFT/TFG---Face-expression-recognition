@@ -206,9 +206,10 @@ int main(){
   /*
    Variables
    */
+  int c = 0;
   Mat image, temp;
   vector<vector<pair< Mat, String> > > images;
-  String subject_name, training_path, test_path;
+  String current_path, training_path, test_path;
   infoBaseDatos* data_base;
   vector<bool> is_training;
 
@@ -244,15 +245,16 @@ int main(){
 
 
   // Applying random transformations to each training image.
-  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++){
+  for( unsigned int i = 0, c = 0; i < data_base->get_num_sujetos(); i++){
     if( is_training.at( i ) ){
       for( unsigned int j = 0; j < data_base->get_num_expresiones(); j++){
         //
         // Do some transformations
         //
-        images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
-        images[i].push_back( make_pair( randomZoom( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+        images[i].push_back( make_pair( horizontalFlip( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) + "-" + to_string( ++c ) ) );
+        images[i].push_back( make_pair( randomZoom( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) + "-" + to_string( ++c ) ) );
         //images[i].push_back( make_pair( randomRotate( images[i][j].first ), getSubjectName( i, data_base->get_expresion( j ) ) ) );
+        c = 0;
       }// for
     }// if
   }// for
@@ -260,6 +262,14 @@ int main(){
   if( !normalizeImages( images, is_training ) )
     return 1;
 
+  // Writting the images.
+  for( unsigned int i = 0; i < images.size(); i++ ){
+    is_training.at( i ) ? current_path = training_path : current_path = test_path;
+    for( unsigned int j = 0; j < images[i].size(); j++ ){
+      images[i][j].first.convertTo( temp, CV_8U );
+      imwrite( current_path + images[i][j].second + ".png", temp );
+    }
+  }
 
   return 0;
 
