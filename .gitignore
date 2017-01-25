@@ -3,6 +3,7 @@
 ##########################
 
 # Directorios
+caffe-master/*
 res/yalefaces
 doc/
 build*/
