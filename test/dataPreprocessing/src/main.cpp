@@ -5,6 +5,7 @@
 #include <time.h>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <opencv2/opencv.hpp>
 #include "utilidades.h"
 #include "infoBaseDatos.h"
@@ -190,7 +191,7 @@ bool normalizeImages( vector<vector<pair< Mat, String> > >& _images, const vecto
         pow( _images[i][j].first - _mean, 2, _temp );
         _stddev += _temp;
       }
-  sqrt( _stddev / _cont - 1 , _stddev);
+  sqrt( _stddev / _cont, _stddev);
 
   // Finally, once we got mean and standard deviation matrix we transform the set
   // of images to a 0 mean - 1 variance set.
@@ -200,6 +201,12 @@ bool normalizeImages( vector<vector<pair< Mat, String> > >& _images, const vecto
         _images[i][j].first = ( _images[i][j].first - _mean ) / _stddev;
 
   return _success;
+}
+
+void writeListFile( const vector<vector<pair< Mat, String> > >& _images ){
+  ofstream fichero_salida;
+
+  fichero_salida.open("listfile", ios::trunc);
 }
 
 int main(){
@@ -212,14 +219,18 @@ int main(){
   String current_path, training_path, test_path;
   infoBaseDatos* data_base;
   vector<bool> is_training;
+  ofstream output_file;
+  String output_file_name;
 
   /*
   Main code
    */
   // Data inicialitation
-  srand(time(NULL));
+  //srand(time(NULL));
+  srand(12345);
   training_path = "data/training/";
   test_path = "data/test/";
+  output_file_name = "data/fileList.txt";
   data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
 
@@ -263,13 +274,30 @@ int main(){
     return 1;
 
   // Writting the images.
-  for( unsigned int i = 0; i < images.size(); i++ ){
-    is_training.at( i ) ? current_path = training_path : current_path = test_path;
-    for( unsigned int j = 0; j < images[i].size(); j++ ){
-      images[i][j].first.convertTo( temp, CV_8U );
-      imwrite( current_path + images[i][j].second + ".png", temp );
+  output_file.open( output_file_name.c_str(), ios::trunc );
+
+  if( output_file.is_open() ){
+
+    for( unsigned int i = 0; i < images.size(); i++ ){
+      //is_training.at( i ) ? current_path = training_path : current_path = test_path;
+      for( unsigned int j = 0; j < images[i].size(); j++ ){
+        images[i][j].first.convertTo( temp, CV_8U );
+        if( is_training.at( i ) ){
+          imwrite( training_path + images[i][j].second + ".png", temp );
+          output_file << "training/" + images[i][j].second + ".png " << j << endl;
+          /** GUARDAR LA CLASE DE EXPRESION DE CADA IMAGEN en lugar de j **/
+        }
+        else{
+          imwrite( test_path + images[i][j].second + ".png", temp );
+        }
+      }
     }
   }
+  else{
+    cerr << "ERROR: No se pudo abrir el archivo '" +output_file_name+"'." << endl;
+    return 1;
+  }
+
 
   return 0;
 
