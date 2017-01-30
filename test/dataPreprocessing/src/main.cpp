@@ -168,13 +168,5 @@ int main(){
     }// if
   }// for
 
-
-  for( unsigned int i = 0; i < subjects.size(); i++){
-    for( unsigned int j = 0; j < subjects.at(i).size(); j++){
-      pintaI( subjects[i][j].getImage(), "LUL");
-    }
-  }
-
-
    return 0;
 }
