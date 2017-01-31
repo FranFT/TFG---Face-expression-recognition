@@ -222,9 +222,5 @@ int main(){
     cerr << "ERROR: No se pudo abrir el archivo '" +output_file_name+"'." << endl;
     return 1;
   }
-/*  ostringstream prueba;
-  prueba << training_path << "subject" << 0 << "-" << 0 << "-" << data_base->get_expresion(subjects[0][5].getLabel()) << ".png";
-  cout << prueba.str() << endl;
-*/
    return 0;
 }
