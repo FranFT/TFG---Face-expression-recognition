@@ -118,7 +118,27 @@ Mat randomRotate(const Mat& _image, int min_range = 5, int max_range = 40){
   return rotated_image;
 }// randomRotate
 
+/**
+ * It normalizes a image to reach 0 mean 1 variance. It is achieved by subtracting
+ * the image pixels mean and then dividing by image standard deviation.
+ * @param  _image image to be normalized.
+ * @return        Normalized image.
+ */
+Mat normalizeImage( const Mat& _image ){
+  // Variables
+  Mat _mean, _stddev, _temp;
 
+  // Code //
+  // Working on a temp variable. Changing its precision for better accuracy
+  _temp = _image.clone();
+  _temp.convertTo( _temp, CV_64F );
+
+  // Calculating mean and standard deviation.
+  meanStdDev( _temp, _mean, _stddev );
+
+  // Returning the normalized image.
+  return (_temp - _mean) / _stddev;
+}// normalizeImage
 
 int main(){
   /*
@@ -167,6 +187,12 @@ int main(){
       }// for
     }// if
   }// for
+
+  // Getting 0 mean 1 variance.
+  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ )
+    if( is_training.at( i ) )
+      for( unsigned int j = 0; j < subjects[i].size(); j++ )
+        subjects[i][j].insertImage( normalizeImage( subjects[i][j].getImage() ) );
 
    return 0;
 }
