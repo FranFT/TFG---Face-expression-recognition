@@ -148,15 +148,21 @@ int main(){
   vector< bool > is_training;
   vector<vector< Subject > > subjects;
   infoBaseDatos* data_base;
+  ofstream output_file;
+  String training_path, test_path, output_file_name;
+  ostringstream image_name;
 
   /*
   Main code
    */
   // Data inicialitation
-  //srand(time(NULL));
-  srand(12345);
+  srand(time(NULL));
+  training_path = "data/training/";
+  test_path = "data/test/";
+  output_file_name = "data/fileList.txt";
   data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
+
 
 
   // Allocating memmory
@@ -194,5 +200,31 @@ int main(){
       for( unsigned int j = 0; j < subjects[i].size(); j++ )
         subjects[i][j].insertImage( normalizeImage( subjects[i][j].getImage() ) );
 
+  // Writing images and listfile.
+  output_file.open( output_file_name.c_str(), ios::trunc );
+  if( output_file.is_open() ){
+    for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ ){
+      for( unsigned int j = 0; j < subjects[i].size(); j++ ){
+        image_name << "subject" << i << "-" << j << "-" << data_base->get_expresion(subjects[i][j].getLabel()) << ".png";
+        if( is_training[i] ){
+          imwrite( training_path + image_name.str(), subjects[i][j].getImage());
+          output_file << "training/" << image_name.str() << " " << subjects[i][j].getLabel() << endl;
+        }
+        else{
+          imwrite( test_path + image_name.str(), subjects[i][j].getImage());
+        }
+        image_name.str("");
+      }
+    }
+    output_file.close();
+  }
+  else{
+    cerr << "ERROR: No se pudo abrir el archivo '" +output_file_name+"'." << endl;
+    return 1;
+  }
+/*  ostringstream prueba;
+  prueba << training_path << "subject" << 0 << "-" << 0 << "-" << data_base->get_expresion(subjects[0][5].getLabel()) << ".png";
+  cout << prueba.str() << endl;
+*/
    return 0;
 }

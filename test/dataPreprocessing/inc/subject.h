@@ -10,5 +10,6 @@ public:
   Subject();
   Subject( const Mat& _image, int _image_label );
   Mat getImage();
+  int getLabel();
   void insertImage( const Mat& _image);
 };

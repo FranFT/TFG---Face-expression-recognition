@@ -10,3 +10,6 @@ Mat Subject::getImage(){
 void Subject::insertImage( const Mat& _image){
   this->image = _image.clone();
 }
+int Subject::getLabel(){
+  return this->image_label;
+}
