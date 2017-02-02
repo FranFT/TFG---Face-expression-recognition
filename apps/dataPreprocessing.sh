@@ -95,3 +95,12 @@ else
   echoY "Exiting script..."
   exit 1
 fi
+
+##############################
+# Getting lmdb format images #
+# ############################
+echo "." && echo ".." && echo "..."
+echo "====================================="
+echoY "... EXECUTING \"convert_imageset\"..."
+echo "====================================="
+./../caffe-master/build/tools/convert_imageset.bin data/ data/listFile.txt yalefaces

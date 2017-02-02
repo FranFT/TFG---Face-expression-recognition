@@ -159,7 +159,7 @@ int main(){
   srand(time(NULL));
   training_path = "data/training/";
   test_path = "data/test/";
-  output_file_name = "data/fileList.txt";
+  output_file_name = "data/listFile.txt";
   data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
 
