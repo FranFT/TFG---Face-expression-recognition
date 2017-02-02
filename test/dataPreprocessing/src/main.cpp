@@ -175,8 +175,8 @@ int main(int argc, char **argv){
   Mat temp_image;
   vector< bool > is_training;
   vector<vector< Subject > > subjects;
-  ofstream output_file;
-  String training_path, test_path, output_file_name;
+  ofstream training_output_file, test_output_file;
+  String training_path, test_path, training_output_file_name, test_output_file_name;
   ostringstream image_name;
 
   /*
@@ -186,7 +186,8 @@ int main(int argc, char **argv){
   srand(time(NULL));
   training_path = "data/training/";
   test_path = "data/test/";
-  output_file_name = "data/listFile.txt";
+  training_output_file_name = "data/trainingListFile.txt";
+  test_output_file_name = "data/testListFile.txt";
   is_training = getTrainingSample( data_base );
 
 
@@ -227,26 +228,30 @@ int main(int argc, char **argv){
         subjects[i][j].insertImage( normalizeImage( subjects[i][j].getImage() ) );
 
   // Writing images and listfile.
-  output_file.open( output_file_name.c_str(), ios::trunc );
-  if( output_file.is_open() ){
+  training_output_file.open( training_output_file_name.c_str(), ios::trunc );
+  test_output_file.open( test_output_file_name.c_str(), ios::trunc );
+  if( training_output_file.is_open() && test_output_file.is_open() ){
     for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ ){
       for( unsigned int j = 0; j < subjects[i].size(); j++ ){
         image_name << "subject" << i << "-" << j << "-" << data_base->get_expresion(subjects[i][j].getLabel()) << ".png";
         if( is_training[i] ){
           imwrite( training_path + image_name.str(), subjects[i][j].getImage());
-          output_file << "training/" << image_name.str() << " ";
-          ( subjects[i][j].getLabel() == choosen_expr ) ? output_file << 1 << endl : output_file << 0 << endl;
+          training_output_file << "training/" << image_name.str() << " ";
+          ( subjects[i][j].getLabel() == choosen_expr ) ? training_output_file << 1 << endl : training_output_file << 0 << endl;
         }
         else{
           imwrite( test_path + image_name.str(), subjects[i][j].getImage());
+          test_output_file << "test/" << image_name.str() << " ";
+          ( subjects[i][j].getLabel() == choosen_expr ) ? test_output_file << 1 << endl : test_output_file << 0 << endl;
         }
         image_name.str("");
       }
     }
-    output_file.close();
+    training_output_file.close();
+    test_output_file.close();
   }
   else{
-    cerr << "ERROR: No se pudo abrir el archivo '" +output_file_name+"'." << endl;
+    cerr << "ERROR: No se pudo escribir el archivo ListFile" << endl;
     return 1;
   }
    return 0;

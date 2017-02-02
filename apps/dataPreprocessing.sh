@@ -110,7 +110,7 @@ echo "." && echo ".." && echo "..."
 echo "====================================="
 echoY "... EXECUTING \"convert_imageset\"..."
 echo "====================================="
-./../caffe-master/build/tools/convert_imageset.bin data/ data/listFile.txt yalefaces
+./../caffe-master/build/tools/convert_imageset.bin data/ data/trainingListFile.txt yalefaces
 if [ $? -eq 0 ]; then
   echoG "Execution of \"convert_imageset\" ended SUCCESSFULLY."
 else
