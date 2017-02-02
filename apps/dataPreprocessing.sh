@@ -4,6 +4,7 @@ source ../data/info.sh
 ### Variables ###
 # Directories
 DATA_DIR="data"
+LMDB_YALEFACES="yalefaces"
 TRAINING_DIR="$DATA_DIR/training"
 TEST_DIR="$DATA_DIR/test"
 
@@ -71,9 +72,15 @@ if [ ! -f $INDICE ]; then
   exit 1
 fi
 
+# Cleaning previous data.
 if [ -d $DATA_DIR ]; # Data dir reset.
 then
   rm -vr $DATA_DIR
+fi
+
+if [ -d $LMDB_YALEFACES ]; # Data dir reset.
+then
+  rm -vr $LMDB_YALEFACES
 fi
 
 # Creating empty directories
@@ -86,7 +93,7 @@ echo "." && echo ".." && echo "..."
 echo "====================================="
 echoY "... EXECUTING \"$INDICE\"..."
 echo "====================================="
-./$INDICE
+./$INDICE happy
 # Checking if 'dataPreprocesing' succeeded
 if [ $? -eq 0 ]; then
   echoG "Execution of \"$INDICE\" ended SUCCESSFULLY."
@@ -104,3 +111,18 @@ echo "====================================="
 echoY "... EXECUTING \"convert_imageset\"..."
 echo "====================================="
 ./../caffe-master/build/tools/convert_imageset.bin data/ data/listFile.txt yalefaces
+if [ $? -eq 0 ]; then
+  echoG "Execution of \"convert_imageset\" ended SUCCESSFULLY."
+else
+  echoR "Execution of \"convert_imageset\" ended FAILED."
+  echoY "Exiting script..."
+  exit 1
+fi
+
+####################
+# Training the CNN #
+# ##################
+echo "." && echo ".." && echo "..."
+echo "====================================="
+echoY "... EXECUTING \"convert_imageset\"..."
+echo "====================================="

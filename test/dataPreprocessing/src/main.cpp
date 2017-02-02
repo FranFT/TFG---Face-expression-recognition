@@ -140,14 +140,41 @@ Mat normalizeImage( const Mat& _image ){
   return (_temp - _mean) / _stddev;
 }// normalizeImage
 
-int main(){
+int main(int argc, char **argv){
+  /*
+  Data base info initialization.
+   */
+  int choosen_expr = 0;
+  infoBaseDatos* data_base;
+  data_base = new yalefaces();
+
+  /*
+  Checking input parameters.
+   */
+  if( argc != 2 ){
+    cerr << "Error: El formato debe ser ./dataPreprocesing <expresion>" << endl;
+    return 1;
+  }
+  else{
+    bool found = false;
+    // Checking if the expression is correct.
+    for( int i = 0; i < data_base->get_num_expresiones(); i++ )
+      if( argv[1] == data_base->get_expresion( i ) ){
+        found = true;
+        choosen_expr = i;
+      }
+
+    if( !found ){
+      cerr << "Error: Debes introducir una expresión válida." << endl;
+      return 1;
+    }
+  }
   /*
    Variables
    */
   Mat temp_image;
   vector< bool > is_training;
   vector<vector< Subject > > subjects;
-  infoBaseDatos* data_base;
   ofstream output_file;
   String training_path, test_path, output_file_name;
   ostringstream image_name;
@@ -160,7 +187,6 @@ int main(){
   training_path = "data/training/";
   test_path = "data/test/";
   output_file_name = "data/listFile.txt";
-  data_base = new yalefaces();
   is_training = getTrainingSample( data_base );
 
 
@@ -208,7 +234,8 @@ int main(){
         image_name << "subject" << i << "-" << j << "-" << data_base->get_expresion(subjects[i][j].getLabel()) << ".png";
         if( is_training[i] ){
           imwrite( training_path + image_name.str(), subjects[i][j].getImage());
-          output_file << "training/" << image_name.str() << " " << subjects[i][j].getLabel() << endl;
+          output_file << "training/" << image_name.str() << " ";
+          ( subjects[i][j].getLabel() == choosen_expr ) ? output_file << 1 << endl : output_file << 0 << endl;
         }
         else{
           imwrite( test_path + image_name.str(), subjects[i][j].getImage());
