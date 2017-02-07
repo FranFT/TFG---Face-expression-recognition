@@ -47,7 +47,7 @@ case $1 in
 		chmod +x ejecutarDemo.sh
 		;;
 
-	*) echo "Caso por defecto"
+	*) echo ""
 		;;
 esac
 
