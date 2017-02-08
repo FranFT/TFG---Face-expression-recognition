@@ -222,10 +222,10 @@ int main(int argc, char **argv){
   }// for
 
   // Getting 0 mean 1 variance.
-  for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ )
+  /*for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ )
     if( is_training.at( i ) )
       for( unsigned int j = 0; j < subjects[i].size(); j++ )
-        subjects[i][j].insertImage( normalizeImage( subjects[i][j].getImage() ) );
+        subjects[i][j].insertImage( normalizeImage( subjects[i][j].getImage() ) );*/
 
   // Writing images and listfile.
   training_output_file.open( training_output_file_name.c_str(), ios::trunc );
