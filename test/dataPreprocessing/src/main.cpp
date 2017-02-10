@@ -177,7 +177,7 @@ int main(int argc, char **argv){
   vector<vector< Subject > > subjects;
   ofstream training_output_file, test_output_file;
   String training_path, test_path, training_output_file_name, test_output_file_name;
-  ostringstream image_name;
+  ostringstream image_name, file_name;
 
   /*
   Main code
@@ -186,9 +186,13 @@ int main(int argc, char **argv){
   srand(time(NULL));
   training_path = "data/training/";
   test_path = "data/test/";
-  training_output_file_name = "data/trainingListFile.txt";
-  test_output_file_name = "data/testListFile.txt";
   is_training = getTrainingSample( data_base );
+
+  file_name << "data/trainingListFile_" << argv[1] << ".txt";
+  training_output_file_name = file_name.str();
+  file_name.str("");
+  file_name << "data/testListFile_" << argv[1] << ".txt";
+  test_output_file_name = file_name.str();
 
 
 

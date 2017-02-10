@@ -38,12 +38,12 @@ fi
 # Cleaning previous data.
 if [ -d $DATA_DIR ]; # Data dir reset.
 then
-  rm -vr $DATA_DIR
+  rm -r $DATA_DIR
 fi
 
 if [ -d $LMDB_YALEFACES ]; # Data dir reset.
 then
-  rm -vr $LMDB_YALEFACES
+  rm -r $LMDB_YALEFACES
 fi
 
 # Creating empty directories
@@ -54,7 +54,7 @@ mkdir -v ./$DATA_DIR ./$TRAINING_DIR ./$TEST_DIR
 # ############################
 echoY "-- EXECUTING \"$INDICE\"..."
 echo " "
-./$INDICE happy
+./$INDICE $1
 # Checking if 'dataPreprocesing' succeeded
 if [ $? -eq 0 ]; then
   echoG "-- Execution of \"$INDICE\" ended SUCCESSFULLY."
@@ -69,13 +69,13 @@ fi
 # ############################
 echoY "... EXECUTING \"convert_imageset\"..."
 echo " "
-./../caffe-master/build/tools/convert_imageset.bin data/ data/trainingListFile.txt yalefaces_train_lmdb
-./../caffe-master/build/tools/convert_imageset.bin data/ data/testListFile.txt yalefaces_test_lmdb
+./../caffe-master/build/tools/convert_imageset.bin data/ data/trainingListFile_$1.txt yalefaces_$1_train_lmdb
+./../caffe-master/build/tools/convert_imageset.bin data/ data/testListFile_$1.txt yalefaces_$1_test_lmdb
 
 if [ $? -eq 0 ]; then
   echoG "-- Execution of \"convert_imageset\" ended SUCCESSFULLY."
 else
-  echoR "-- Execution of \"convert_imageset\" ended FAILED."
+  echoR "-- Execution of \"convert_imageset\": FAILED."
   echoY "-- Exiting script..."
   exit 1
 fi
