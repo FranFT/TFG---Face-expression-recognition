@@ -86,5 +86,3 @@ else
   echoY "-- Exiting script..."
   exit 1
 fi
-
-rm -r yalefaces_train_lmdb yalefaces_test_lmdb

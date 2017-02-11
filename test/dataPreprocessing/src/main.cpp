@@ -140,11 +140,15 @@ Mat normalizeImage( const Mat& _image ){
   return (_temp - _mean) / _stddev;
 }// normalizeImage
 
+/**
+ * It generates the solver file used for "bvlc_reference_caffenet"
+ * @param _expr [description]
+ */
 void generateSolverFile( char *_expr ){
   ofstream solver_file;
   solver_file.open( "solver.prototxt", ios::trunc );
   if( solver_file.is_open() ){
-    solver_file << "net: data/nets/train_val.prototxt" << endl
+    solver_file << "net: \"train_val.prototxt\"" << endl
     << "test_iter: 10" << endl
     << "test_interval: 10" << endl
     << "base_lr: 0.00001" << endl
@@ -152,7 +156,7 @@ void generateSolverFile( char *_expr ){
     << "gamma: 0.1" << endl
     << "stepsize: 10" << endl
     << "display: 20" << endl
-    << "max_iter: 100" << endl
+    << "max_iter: 200" << endl
     << "momentum: 0.9" << endl
     << "weight_decay: 0.0005" << endl
     << "snapshot: 10000" << endl
