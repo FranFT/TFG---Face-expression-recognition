@@ -15,24 +15,31 @@ TEST_DIR="$DATA_DIR/test"
 INDICE=`basename "$0"`
 INDICE="${INDICE%.*}"
 
-#############################
-# building dataPreprocesing #
-#############################
-echoY "-- BUILDING \"$INDICE\"..."
-echo " "
+# Compile only if build doesnt exists.
+if [ ! -d "../${BUILD_DIR[$INDICE]}" ]
+then
+  #############################
+  # building dataPreprocesing #
+  #############################
+  echoY "-- BUILDING \"$INDICE\"..."
+  echo " "
 
-./$BUILD_APP $INDICE TEST
+  ./$BUILD_APP $INDICE TEST
 
-# Creating training and test directories if they doesnt exist
-cd ../${BUILD_DIR[$INDICE]} # Switching to build directory
+  # Creating training and test directories if they doesnt exist
+  cd ../${BUILD_DIR[$INDICE]} # Switching to build directory
 
-# Checking if build succeeded
-if [ ! -f $INDICE ]; then
-  echo " " && echo " "
-  echoR "-- Building \"$INDICE\" FAILED"
-  echoY "-- Exiting script..."
-  cd .. && ./clean.sh
-  exit 1
+  # Checking if build succeeded
+  if [ ! -f $INDICE ]; then
+    echo " " && echo " "
+    echoR "-- Building \"$INDICE\" FAILED"
+    echoY "-- Exiting script..."
+    cd .. && ./clean.sh
+    exit 1
+  fi
+else
+  # Creating training and test directories if they doesnt exist
+  cd ../${BUILD_DIR[$INDICE]} # Switching to build directory
 fi
 
 # Cleaning previous data.
