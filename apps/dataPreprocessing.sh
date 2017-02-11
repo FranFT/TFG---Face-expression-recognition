@@ -69,8 +69,8 @@ fi
 # ############################
 echoY "... EXECUTING \"convert_imageset\"..."
 echo " "
-./../caffe-master/build/tools/convert_imageset.bin data/ data/trainingListFile_$1.txt yalefaces_$1_train_lmdb
-./../caffe-master/build/tools/convert_imageset.bin data/ data/testListFile_$1.txt yalefaces_$1_test_lmdb
+./../caffe-master/build/tools/convert_imageset.bin data/ trainingListFile.txt yalefaces_train_lmdb
+./../caffe-master/build/tools/convert_imageset.bin data/ testListFile_$1.txt yalefaces_test_lmdb
 
 if [ $? -eq 0 ]; then
   echoG "-- Execution of \"convert_imageset\" ended SUCCESSFULLY."
@@ -79,3 +79,5 @@ else
   echoY "-- Exiting script..."
   exit 1
 fi
+
+rm -r yalefaces_train_lmdb yalefaces_test_lmdb

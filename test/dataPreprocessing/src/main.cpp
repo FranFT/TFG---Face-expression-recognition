@@ -187,11 +187,8 @@ int main(int argc, char **argv){
   training_path = "data/training/";
   test_path = "data/test/";
   is_training = getTrainingSample( data_base );
-
-  file_name << "data/trainingListFile_" << argv[1] << ".txt";
-  training_output_file_name = file_name.str();
-  file_name.str("");
-  file_name << "data/testListFile_" << argv[1] << ".txt";
+  training_output_file_name = "trainingListFile.txt";
+  file_name << "testListFile_" << argv[1] << ".txt";
   test_output_file_name = file_name.str();
 
 
