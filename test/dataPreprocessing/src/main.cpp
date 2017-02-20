@@ -148,7 +148,7 @@ void generateSolverFile( char *_expr ){
   ofstream solver_file;
   solver_file.open( "solver.prototxt", ios::trunc );
   if( solver_file.is_open() ){
-    solver_file << "net: \"train_val.prototxt\"" << endl
+    solver_file << "net: \"buildDataPreprocessing/train_val.prototxt\"" << endl
     << "test_iter: 10" << endl
     << "test_interval: 10" << endl
     << "base_lr: 0.00001" << endl
@@ -160,7 +160,8 @@ void generateSolverFile( char *_expr ){
     << "momentum: 0.9" << endl
     << "weight_decay: 0.0005" << endl
     << "snapshot: 10000" << endl
-    << "snapshot_prefix: \"data/nets/yalefaces_train_"<< _expr << "\"" << endl
+    << "snapshot_prefix: \"/home/fran/Escritorio/results/yalefaces_train_"<< _expr << "\"" << endl
+    //<< "snapshot_prefix: \"data/nets/yalefaces_train_"<< _expr << "\"" << endl
     << "solver_mode: CPU";
   }
 }

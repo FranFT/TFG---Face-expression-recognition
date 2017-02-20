@@ -68,7 +68,7 @@ do
 
   # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
   #cd ..
-  ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel
+  ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/$i-output.txt
 
   # Erasing files used for training.
   rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
