@@ -161,6 +161,55 @@ Mat randomNoise( const Mat& _image ){
 }
 
 /**
+ * Apply a random combination of the transformations already implemented to the
+ * same image.
+ * @param  _image     Image to be transformed.
+ * @param  output_mat Transformed output image.
+ * @param  nt         Number of different transformations that can be applied.
+ * @return            True if some transformation was applied. False otherwise.
+ */
+bool combinedTrans( const Mat& _image, Mat& output_mat, int nt = 4 ){
+  // Variables //
+  int trans_to_be_applied;
+  bool trasn_was_applied;
+
+  // Code //
+  output_mat = _image.clone();
+  trasn_was_applied = false;
+
+  // Applying 'num_trans' transformations with a 50% prob.
+  for( unsigned int i = 0; i < nt; i++ ){
+    trans_to_be_applied = rand() % nt;
+    if( rand() % 2 == 0 ){
+      trasn_was_applied = true;
+      switch ( trans_to_be_applied ) {
+        case 0:
+          output_mat = horizontalFlip( output_mat );
+        break;
+
+        case 1:
+          output_mat = randomZoom( output_mat );
+        break;
+
+        case 2:
+          output_mat = randomRotate( output_mat );
+        break;
+
+        case 3:
+          output_mat = randomNoise( output_mat );
+        break;
+
+        default:
+          cerr << "No hay definida una transfomación para el valor: " << trans_to_be_applied << endl;
+        break;
+      }
+    }
+  }
+
+  return trasn_was_applied;
+}
+
+/**
  * It generates the solver file used for "bvlc_reference_caffenet"
  * @param _expr [description]
  */
@@ -224,6 +273,7 @@ int main(int argc, char **argv){
   ofstream training_output_file, test_output_file;
   String training_path, test_path, training_output_file_name, test_output_file_name;
   ostringstream image_name, file_name;
+  int combinedImagesToBeGenerated;
 
   /*
   Main code
@@ -236,6 +286,8 @@ int main(int argc, char **argv){
   training_output_file_name = "trainingListFile.txt";
   file_name << "testListFile_" << argv[1] << ".txt";
   test_output_file_name = file_name.str();
+
+  combinedImagesToBeGenerated = 5;
 
 
 
@@ -265,6 +317,14 @@ int main(int argc, char **argv){
         subjects.at( i ).push_back( Subject( randomZoom( subjects[i][j].getImage()), j ) );
         subjects.at( i ).push_back( Subject( randomRotate( subjects[i][j].getImage()), j ) );
         subjects.at( i ).push_back( Subject( randomNoise( subjects[i][j].getImage()), j ) );
+
+        //
+        // Combined transformations.
+        //
+        Mat combinedTransImage;
+        for( unsigned int k = 0; k < rand() % combinedImagesToBeGenerated; k++ )
+            if( combinedTrans( subjects[i][j].getImage(), combinedTransImage ) )
+              subjects.at( i ).push_back( Subject( combinedTransImage, j ) );
       }// for
     }// if
   }// for
