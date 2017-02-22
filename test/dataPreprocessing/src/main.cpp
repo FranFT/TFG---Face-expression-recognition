@@ -113,7 +113,7 @@ Mat randomRotate(const Mat& _image, int min_range = 5, int max_range = 40){
   // Getting the rotation matrix and applying it.
   rot_matrix = getRotationMatrix2D( center_point, rotation_angle, 1.0 );
   warpAffine( _image, rotated_image, rot_matrix, _image.size(),
-  CV_INTER_CUBIC,  BORDER_TRANSPARENT);
+  CV_INTER_CUBIC,  BORDER_REFLECT);
 
   return rotated_image;
 }// randomRotate
@@ -139,6 +139,26 @@ Mat normalizeImage( const Mat& _image ){
   // Returning the normalized image.
   return (_temp - _mean) / _stddev;
 }// normalizeImage
+
+/**
+ * Adds Gaussian Noise to a given image.
+ * @param  _image Image which will receive noise.
+ * @return        50% prob to return the given image with brigher or darker noise.
+ */
+Mat randomNoise( const Mat& _image ){
+  // Variables.
+  Mat gaussianNoise;
+
+  // Code //
+  gaussianNoise = _image.clone();
+  // Getting the mask.
+  randn(gaussianNoise ,50,20);
+
+  if( rand() % 2 == 0)
+    return _image - gaussianNoise; // Darker noise.
+  else
+    return _image + gaussianNoise; // Brighter noise.
+}
 
 /**
  * It generates the solver file used for "bvlc_reference_caffenet"
@@ -243,7 +263,8 @@ int main(int argc, char **argv){
         //
         subjects.at( i ).push_back( Subject( horizontalFlip( subjects[i][j].getImage()), j ) );
         subjects.at( i ).push_back( Subject( randomZoom( subjects[i][j].getImage()), j ) );
-        //subjects.at( i ).push_back( Subject( randomRotate( subjects[i][j].getImage()), j ) );
+        subjects.at( i ).push_back( Subject( randomRotate( subjects[i][j].getImage()), j ) );
+        subjects.at( i ).push_back( Subject( randomNoise( subjects[i][j].getImage()), j ) );
       }// for
     }// if
   }// for
