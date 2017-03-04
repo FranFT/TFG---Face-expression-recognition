@@ -237,20 +237,27 @@ void generateSolverFile( char *_expr ){
 
 int main(int argc, char **argv){
   /*
-  Data base info initialization.
+   Variables
    */
   int choosen_expr = 0;
   infoBaseDatos* data_base;
   data_base = new yalefaces();
+  Mat temp_image;
+  vector< bool > is_training;
+  vector<vector< Subject > > subjects;
+  ofstream training_output_file, test_output_file;
+  String training_path, test_path, training_output_file_name, test_output_file_name;
+  ostringstream image_name, file_name;
+  int combinedImagesToBeGenerated;
 
   /*
   Checking input parameters.
    */
-  if( argc != 2 ){
-    cerr << "Error: El formato debe ser ./dataPreprocesing <expresion>" << endl;
-    return 1;
+  if( argc == 1 ){ // No parameters.
+    choosen_expr = -1;
+    file_name << "testListFile_all.txt";
   }
-  else{
+  else if( argc == 2 ){ // Expression was given.
     bool found = false;
     // Checking if the expression is correct.
     for( int i = 0; i < data_base->get_num_expresiones(); i++ )
@@ -263,17 +270,15 @@ int main(int argc, char **argv){
       cerr << "Error: Debes introducir una expresión válida." << endl;
       return 1;
     }
+    else{
+      file_name << "testListFile_" << argv[1] << ".txt";
+    }
   }
-  /*
-   Variables
-   */
-  Mat temp_image;
-  vector< bool > is_training;
-  vector<vector< Subject > > subjects;
-  ofstream training_output_file, test_output_file;
-  String training_path, test_path, training_output_file_name, test_output_file_name;
-  ostringstream image_name, file_name;
-  int combinedImagesToBeGenerated;
+  else{ // More than one parameter
+    cerr << "Error: El número de parámetros debe ser 1 o ninguno." << endl;
+    return 1;
+  }
+
 
   /*
   Main code
@@ -284,12 +289,8 @@ int main(int argc, char **argv){
   test_path = "data/test/";
   is_training = getTrainingSample( data_base );
   training_output_file_name = "trainingListFile.txt";
-  file_name << "testListFile_" << argv[1] << ".txt";
   test_output_file_name = file_name.str();
-
   combinedImagesToBeGenerated = 5;
-
-
 
   // Allocating memmory
   subjects = vector<vector< Subject > >( data_base->get_num_sujetos() );
@@ -345,12 +346,18 @@ int main(int argc, char **argv){
         if( is_training[i] ){
           imwrite( training_path + image_name.str(), subjects[i][j].getImage());
           training_output_file << "training/" << image_name.str() << " ";
-          ( subjects[i][j].getLabel() == choosen_expr ) ? training_output_file << 1 << endl : training_output_file << 0 << endl;
+          if( choosen_expr == -1 )
+            training_output_file << subjects[i][j].getLabel() << endl;
+          else
+            ( subjects[i][j].getLabel() == choosen_expr ) ? training_output_file << 1 << endl : training_output_file << 0 << endl;
         }
         else{
           imwrite( test_path + image_name.str(), subjects[i][j].getImage());
           test_output_file << "test/" << image_name.str() << " ";
-          ( subjects[i][j].getLabel() == choosen_expr ) ? test_output_file << 1 << endl : test_output_file << 0 << endl;
+          if( choosen_expr == -1 )
+            test_output_file << subjects[i][j].getLabel() << endl;
+          else
+            ( subjects[i][j].getLabel() == choosen_expr ) ? test_output_file << 1 << endl : test_output_file << 0 << endl;
         }
         image_name.str("");
       }

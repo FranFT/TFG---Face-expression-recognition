@@ -77,7 +77,13 @@ fi
 echoY "... EXECUTING \"convert_imageset\"..."
 echo " "
 ./../caffe-master/build/tools/convert_imageset.bin data/ trainingListFile.txt yalefaces_train_lmdb
-./../caffe-master/build/tools/convert_imageset.bin data/ testListFile_$1.txt yalefaces_test_lmdb
+
+# If a specific expression wasnt given, we access testListFile_all.txt.
+if [ -z "$1" ]; then
+  ./../caffe-master/build/tools/convert_imageset.bin data/ testListFile_all.txt yalefaces_test_lmdb
+else
+  ./../caffe-master/build/tools/convert_imageset.bin data/ testListFile_$1.txt yalefaces_test_lmdb
+fi
 
 if [ $? -eq 0 ]; then
   echoG "-- Execution of \"convert_imageset\" ended SUCCESSFULLY."
