@@ -37,16 +37,44 @@ fi
 log_msg "Executing Phase_1"
 cd $APP_DIR
 
+# ------------------------------------------ #
+# --- Preprocesamiento de la información --- #
+# ------------------------------------------ #
 # If -all option was given we train a single model for all expressions
 if [ "$1" == "-all" ]; then
-  echoR "ALL"
+    echoY "-- Preprocessing ALL expressions..."
+  ./$PHASE_1
+
+  # Checking if Preprocessing succeeded.
+  if [ $? -eq 0 ]; then
+    echoG "-- '$1' expression preprocessed SUCCESSFULLY."
+  else
+    echoR "-- Execution of \"$PHASE_1\" for '$i': FAILED."
+    echoY "-- Exiting script..."
+    exit 1
+  fi
+
+  cd ..
+  # Copying the CNN once.
+  if [ ! -f "${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt" ]
+  then
+    echoY "-- Copying CNN to build directory.."
+    cp data/nets/caffeNet_all.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt
+  fi
+
+  # Getting expression mean image used by "bvlc_reference_caffenet"
+  $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb/ ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto
+
+  # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
+  ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/output/all-output.txt
+
+  # Erasing files used for training.
+  rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
+
 else
   # training a CNN for every expression in yalefaces.
   for i in "${YALEFACES_EXPR[@]}"
   do
-    # ------------------------------------------ #
-    # --- Preprocesamiento de la información --- #
-    # ------------------------------------------ #
     echoY "-- Preprocessing '$i' expression..."
     ./$PHASE_1 $i
 
@@ -65,7 +93,7 @@ else
     if [ ! -f "${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt" ]
     then
       echoY "-- Copying CNN to build directory.."
-      cp data/nets/train_val.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/
+      cp data/nets/caffeNet_single.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/
     fi
 
     # Getting expression mean image used by "bvlc_reference_caffenet"
@@ -73,7 +101,7 @@ else
 
     # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
     #cd ..
-    ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/$i-output.txt
+    ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/output/$i-output.txt
 
     # Erasing files used for training.
     rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb

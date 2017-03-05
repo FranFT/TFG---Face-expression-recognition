@@ -8,6 +8,7 @@ DATA_DIR="data"
 LMDB_YALEFACES="yalefaces"
 TRAINING_DIR="$DATA_DIR/training"
 TEST_DIR="$DATA_DIR/test"
+TRAINING_SETUP="trainingSetup"
 
 ### SCRIPT ###
 
@@ -67,6 +68,21 @@ if [ $? -eq 0 ]; then
   echoG "-- Execution of \"$INDICE\" ended SUCCESSFULLY."
 else
   echoR "-- Execution of \"$INDICE\" ended FAILED."
+  echoY "-- Exiting script..."
+  exit 1
+fi
+
+###########################
+# Executing trainingSetup #
+# #########################
+echoY "-- EXECUTING \"$TRAINING_SETUP\"..."
+echo " "
+./$TRAINING_SETUP $1
+# Checking if 'dataPreprocesing' succeeded
+if [ $? -eq 0 ]; then
+  echoG "-- Execution of \"$TRAINING_SETUP\" ended SUCCESSFULLY."
+else
+  echoR "-- Execution of \"$TRAINING_SETUP\" ended FAILED."
   echoY "-- Exiting script..."
   exit 1
 fi
