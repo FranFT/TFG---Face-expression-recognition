@@ -6,6 +6,7 @@
 caffe-master/*
 !caffe-master/custom
 
+data/nets/output
 res/yalefaces
 doc/
 build*/
