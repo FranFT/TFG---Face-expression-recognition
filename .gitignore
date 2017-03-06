@@ -49,3 +49,5 @@ lib/**/mh
 
 # Otros
 *~
+
+*.png
