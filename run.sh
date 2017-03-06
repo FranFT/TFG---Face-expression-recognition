@@ -16,10 +16,14 @@ APP_DIR="apps"
 DATA_DIR="data"
 CAFFE_DIR="caffe-master"
 PHASE_1_DIR="dataPreprocessing"
+RESULT_DIR="../../Escritorio/results/"
 
 # Scripts
 CLEAN="clean.sh"
 PHASE_1="$PHASE_1_DIR.sh"
+
+# Python Scripts
+CONF_MATRIX="Caffe_Convnet_ConfuxionMatrix.py"
 
 
 ############################### Script #########################################
@@ -41,15 +45,23 @@ cd $APP_DIR
 # --- Preprocesamiento de la información --- #
 # ------------------------------------------ #
 # If -all option was given we train a single model for all expressions
-if [ "$1" == "-all" ]; then
-    echoY "-- Preprocessing ALL expressions..."
-  ./$PHASE_1
+if [ "$#" -eq 1 ]; then
+  case $1 in
+    "-all")
+      echoY "-- Preprocessing ALL expressions..."
+      ./$PHASE_1
+    ;;
+    *)
+      echoY "-- Preprocessing '$1' expression..."
+      ./$PHASE_1 $1
+    ;;
+  esac
 
   # Checking if Preprocessing succeeded.
   if [ $? -eq 0 ]; then
     echoG "-- '$1' expression preprocessed SUCCESSFULLY."
   else
-    echoR "-- Execution of \"$PHASE_1\" for '$i': FAILED."
+    echoR "-- Execution of \"$PHASE_1\" for '$1': FAILED."
     echoY "-- Exiting script..."
     exit 1
   fi
@@ -59,7 +71,7 @@ if [ "$1" == "-all" ]; then
   if [ ! -f "${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt" ]
   then
     echoY "-- Copying CNN to build directory.."
-    cp data/nets/caffeNet_all.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt
+    cp data/nets/caffeNet_single.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt
   fi
 
   # Getting expression mean image used by "bvlc_reference_caffenet"
@@ -67,6 +79,13 @@ if [ "$1" == "-all" ]; then
 
   # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
   ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/output/all-output.txt
+
+  # Getting the confusion matrix
+  python $CAFFE_DIR/python/$CONF_MATRIX \
+  --proto ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt \
+  --model $RESULT_DIR/yalefaces_train_$1_iter_200.caffemodel \
+  --mean ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto \
+  --leveldb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
 
   # Erasing files used for training.
   rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
@@ -109,7 +128,6 @@ else
     cd $APP_DIR
   done
 fi
-
 
 echoG "-- Training completed..."
 

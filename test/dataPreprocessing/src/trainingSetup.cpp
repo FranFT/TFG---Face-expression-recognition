@@ -21,7 +21,7 @@ void generateSolverFile( const string& _expr ){
     << "net: \"buildDataPreprocessing/train_val.prototxt\"" << endl
     << "test_iter: 10" << endl
     << "test_interval: 10" << endl
-    << "base_lr: 0.001" << endl
+    << "base_lr: 0.00001" << endl
     << "lr_policy: \"step\"" << endl
     << "gamma: 0.1" << endl
     << "stepsize: 10" << endl
