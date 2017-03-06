@@ -87,9 +87,6 @@ if [ "$#" -eq 1 ]; then
   --mean ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto \
   --leveldb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
 
-  # Erasing files used for training.
-  rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
-
 else
   # training a CNN for every expression in yalefaces.
   for i in "${YALEFACES_EXPR[@]}"
