@@ -5,22 +5,7 @@
 #############################################
 
 ############################## Includes ########################################
-source apps/funciones.sh
-source data/yalefaces.sh
-source data/info.sh
-
-############################## Variables #######################################
-# Directorios.
-ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-APP_DIR="apps"
-DATA_DIR="data"
-CAFFE_DIR="caffe-master"
-PHASE_1_DIR="dataPreprocessing"
-RESULT_DIR="../../Escritorio/results/"
-
-# Scripts
-CLEAN="clean.sh"
-PHASE_1="$PHASE_1_DIR.sh"
+source configuration.sh
 
 # Python Scripts
 CONF_MATRIX="Caffe_Convnet_ConfuxionMatrix.py"
@@ -45,101 +30,78 @@ cd $APP_DIR
 # --- Preprocesamiento de la información --- #
 # ------------------------------------------ #
 # If -all option was given we train a single model for all expressions
-if [ "$#" -eq 1 ]; then
-  case $1 in
-    "-all")
-      echoY "-- Preprocessing ALL expressions..."
-      ./$PHASE_1
-    ;;
-    *)
-      echoY "-- Preprocessing '$1' expression..."
-      ./$PHASE_1 $1
-    ;;
-  esac
+
+if [ $NUM_EXPR -eq 0 ]; then
+  echoY "-- Preprocessing for ALL expressions..."
+  ./$PREPROCESSING
 
   # Checking if Preprocessing succeeded.
   if [ $? -eq 0 ]; then
     echoG "-- '$1' expression preprocessed SUCCESSFULLY."
   else
-    echoR "-- Execution of \"$PHASE_1\" for '$1': FAILED."
+    echoR "-- Execution of \"$PREPROCESSING\" for ALL expressions: FAILED."
     echoY "-- Exiting script..."
     exit 1
   fi
 
-  cd ..
-  # Copying the CNN once.
-  if [ ! -f "${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt" ]
-  then
-    echoY "-- Copying CNN to build directory.."
-    cp data/nets/caffeNet_single.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt
-  fi
+  cd $ROOT_DIR
 
-  # Getting expression mean image used by "bvlc_reference_caffenet"
-  $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb/ ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto
+  echoY "-- Copying CNN to build directory.."
+  cp $NET_DIR/$NET_USED $WORKING_DIR/train_val.prototxt
 
-  # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
-  ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/output/all-output.txt
+  # Getting expression mean image used
+  $CAFFE_TOOLS/compute_image_mean \
+  -backend=lmdb $WORKING_DIR/$TRAIN_LEVELDB/ \
+  $WORKING_DIR/mean.binaryproto
 
-  # Getting the confusion matrix
-  python $CAFFE_DIR/python/$CONF_MATRIX \
-  --proto ${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt \
-  --model $RESULT_DIR/yalefaces_train_$1_iter_200.caffemodel \
-  --mean ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto \
-  --leveldb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
+  # Training model using "Fine-tune"
+  ./$CAFFE_TOOLS/caffe train \
+  -solver $WORKING_DIR/solver.prototxt \
+  -weights $WEIGHTS_PATH \
+  2>&1 | tee $NET_DIR/output/all-output.txt
 
 else
-  # training a CNN for every expression in yalefaces.
-  for i in "${YALEFACES_EXPR[@]}"
+
+  for i in "$EXPR"
   do
     echoY "-- Preprocessing '$i' expression..."
-    ./$PHASE_1 $i
+    ./$PREPROCESSING $i
 
     # Checking if Preprocessing succeeded.
     if [ $? -eq 0 ]; then
-      echoG "-- '$1' expression preprocessed SUCCESSFULLY."
+      echoG "-- '$i' expression preprocessed SUCCESSFULLY."
     else
-      echoR "-- Execution of \"$PHASE_1\" for '$i': FAILED."
+      echoR "-- Execution of \"$PREPROCESSING\" for '$i': FAILED."
       echoY "-- Exiting script..."
       exit 1
     fi
 
-    cd ..
+    cd $ROOT_DIR
 
     # Copying the CNN once.
-    if [ ! -f "${BUILD_DIR[$PHASE_1_DIR]}/train_val.prototxt" ]
+    if [ ! -f "$WORKING_DIR/train_val.prototxt" ]
     then
       echoY "-- Copying CNN to build directory.."
-      cp data/nets/caffeNet_single.prototxt ${BUILD_DIR[$PHASE_1_DIR]}/
+      cp $NET_DIR/$NET_USED $WORKING_DIR/train_val.prototxt
     fi
 
-    # Getting expression mean image used by "bvlc_reference_caffenet"
-    $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb/ ${BUILD_DIR[$PHASE_1_DIR]}/mean.binaryproto
+    # Getting expression mean image used
+    $CAFFE_TOOLS/compute_image_mean \
+    -backend=lmdb $WORKING_DIR/$TRAIN_LEVELDB/ \
+    $WORKING_DIR/mean.binaryproto
 
-    # Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
-    #cd ..
-    ./$CAFFE_DIR/build/tools/caffe train -solver ${BUILD_DIR[$PHASE_1_DIR]}/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel 2>&1 | tee data/nets/output/$i-output.txt
+    # Training model using "Fine-tune"
+    ./$CAFFE_TOOLS/caffe train \
+    -solver $WORKING_DIR/solver.prototxt \
+    -weights $WEIGHTS_PATH \
+    2>&1 | tee $NET_DIR/output/$i-output.txt
 
     # Erasing files used for training.
-    rm -r ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_train_lmdb ${BUILD_DIR[$PHASE_1_DIR]}/yalefaces_test_lmdb
+    rm -r $WORKING_DIR/$TRAIN_LEVELDB $WORKING_DIR/$TEST_LEVELDB
 
     cd $APP_DIR
+
   done
 fi
 
 echoG "-- Training completed..."
-
-
-
-######## Fase - 2 ########
-# ------------------------------------------ #
-# --------- Entrenamiento de la red -------- #
-# ------------------------------------------ #
-#log_msg "Executing Phase_2"
-# Getting mean image needed by the model.
-#if [ -f "data/nets/mean.binaryproto" ]
-#then
-#  $CAFFE_DIR/build/tools/compute_image_mean -backend=lmdb $PHASE_1_DIR/yalefaces_train_lmdb/ data/nets/mean.binaryproto
-#fi
-# Training model using "Fine-tune" technique through "bvlc_reference_caffenet"
-#cd ..
-#./$CAFFE_DIR/build/tools/caffe train -solver data/nets/solver.prototxt -weights $CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel
