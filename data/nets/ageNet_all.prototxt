@@ -1,4 +1,4 @@
-name: "CaffeNet"
+name: "AgeNet"
 layers {
   name: "data"
   type: DATA

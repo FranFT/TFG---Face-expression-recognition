@@ -5,16 +5,21 @@ source data/info.sh
 # Variables                                                                    #
 ################################################################################
 CAFFE_DIR="caffe-master"
-# Basic variables
-#
+# Basic variables #
+# exprs: centerlight, glasses, happy, leftlight, noglasses, normal, rightlight,
+# sad, sleepy, surprised, wink.
 EXPR=(happy)
-#
-NET_USED="caffeNet_all.prototxt"
+
+# nets: caffeNet_all.prototxt, caffeNet_single.prototxt, ageNet_all.prototxt,
+# ageNet_single.prototxt
+NET_USED="ageNet_single.prototxt"
 
 #
-WEIGHTS_PATH="$CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
+WEIGHTS_PATH="data/weights/ageNet.caffemodel"
+#WEIGHTS_PATH="$CAFFE_DIR/models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel"
 
-# Special Variables
+
+# Special Variables #
 NUM_EXPR=${#EXPR[@]}
 
 ################################################################################
