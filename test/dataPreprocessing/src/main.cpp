@@ -339,6 +339,37 @@ int main(int argc, char **argv){
     }// if
   }// for
 
+  // Compensating test sample in the binary classification case.
+  if( choosen_expr != -1 ){
+    cout << "Compensando..." << endl;
+    int positiveTestImgs = 0;
+    int negativeTestImgs = 0;
+    vector<int> testSubjects;
+
+    for( unsigned int i = 0; i < subjects.size(); i++ )
+      if( !is_training.at( i ) ){
+        testSubjects.push_back( i );
+        for( unsigned int j = 0; j < subjects.at( i ).size(); j++)
+          if( subjects[i][j].getLabel() == choosen_expr )
+            positiveTestImgs++;
+          else
+            negativeTestImgs++;
+      }// if
+
+    int newImgsPerSubject = ( negativeTestImgs - positiveTestImgs ) /  testSubjects.size();
+
+    for( unsigned int i = 0; i < testSubjects.size(); i++ ){
+      int imagesGenerated = 0;
+      while( imagesGenerated < newImgsPerSubject ){
+        Mat combinedTransImage;
+        if( combinedTrans( subjects[testSubjects.at(i)][choosen_expr].getImage(), combinedTransImage ) ){
+          subjects.at( testSubjects.at( i ) ).push_back( Subject( combinedTransImage, choosen_expr ) );
+          imagesGenerated++;
+        }// if
+      }// while
+    }// for
+  }// if
+
   // Getting 0 mean 1 variance.
   /*for( unsigned int i = 0; i < data_base->get_num_sujetos(); i++ )
     if( is_training.at( i ) )
