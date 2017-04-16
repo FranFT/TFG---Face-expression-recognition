@@ -1,0 +1,2 @@
+0 Not happy
+1 happy

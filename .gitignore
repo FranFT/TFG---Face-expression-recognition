@@ -51,3 +51,5 @@ lib/**/mh
 *~
 
 *.png
+
+data/weights/

@@ -8,7 +8,7 @@ CAFFE_DIR="caffe-master"
 # Basic variables #
 # exprs: centerlight, glasses, happy, leftlight, noglasses, normal, rightlight,
 # sad, sleepy, surprised, wink.
-EXPR=(happy)
+EXPR=(wink)
 
 # nets: caffeNet_all.prototxt, caffeNet_single.prototxt, ageNet_all.prototxt,
 # ageNet_single.prototxt

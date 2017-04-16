@@ -18,16 +18,16 @@ void generateSolverFile( const string& _expr ){
     solver_file
     << "net: \"buildDataPreprocessing/train_val.prototxt\"" << endl
     << "test_iter: 10" << endl
-    << "test_interval: 100" << endl
-    << "base_lr: 0.0001" << endl
+    << "test_interval: 25" << endl
+    << "base_lr: 0.01" << endl
     << "lr_policy: \"step\"" << endl
-    << "gamma: 0.1" << endl
-    << "stepsize: 100" << endl
-    << "display: 100" << endl
-    << "max_iter: 1000" << endl
+    << "gamma: 0.05" << endl
+    << "stepsize: 50" << endl
+    << "display: 10" << endl
+    << "max_iter: 200" << endl
     << "momentum: 0.9" << endl
     << "weight_decay: 0.0005" << endl
-    << "snapshot: 200" << endl
+    << "snapshot: 250" << endl
     << "snapshot_prefix: \"/home/fran/Escritorio/results/yalefaces_train_"<< _expr << "\"" << endl
     //<< "snapshot_prefix: \"data/nets/yalefaces_train_"<< _expr << "\"" << endl
     << "solver_mode: CPU";
