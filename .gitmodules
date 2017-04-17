@@ -1,3 +1,6 @@
 [submodule "caffe-master"]
 	path = caffe-master
 	url = https://github.com/BVLC/caffe.git
+[submodule "data-preprocessing"]
+	path = data-preprocessing
+	url = https://github.com/FranFT/data-preprocessing.git
