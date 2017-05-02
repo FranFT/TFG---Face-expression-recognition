@@ -3,11 +3,9 @@
 ##########################
 
 # Directorios
-caffe-master/*
-!caffe-master/custom
-
 data/nets/output
 res/yalefaces
+res/KDEF 
 doc/
 build*/
 lib/**/mh
