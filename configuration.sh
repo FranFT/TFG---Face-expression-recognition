@@ -31,6 +31,7 @@ APP_DIR="apps"
 DATA_DIR="data"
 LIB_DIR="lib"
 RESULT_DIR="../../Escritorio/results/"
+PREPROC_DIR="data-preprocessing"
 
 # Special Dirs
 CAFFE_TOOLS=$CAFFE_DIR/build/tools
