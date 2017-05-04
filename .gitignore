@@ -4,8 +4,9 @@
 
 # Directorios
 data/nets/output
+data/kdef/
 res/yalefaces
-res/KDEF 
+res/KDEF
 doc/
 build*/
 lib/**/mh
