@@ -14,6 +14,7 @@ if [ ! -d "../data/kdef/$TRAINING_DB_NAME" ] || [ ! -d "../data/kdef/$TEST_DB_NA
   cd build
   ../../$CAFFE_TOOLS/convert_imageset training/ trainingListFile.txt ../../data/kdef/$TRAINING_DB_NAME
   ../../$CAFFE_TOOLS/convert_imageset test/ testListFile.txt ../../data/kdef/$TEST_DB_NAME
+  mv solver.prototxt ../../data/kdef/solver.prototxt
   cd ../../
   $CAFFE_TOOLS/compute_image_mean -backend=lmdb data/kdef/$TRAINING_DB_NAME data/kdef/mean.binaryproto
 else
@@ -21,3 +22,7 @@ else
   echoG "------ '../data/kdef/$TRAINING_DB_NAME'"
   echoG "------ '../data/kdef/$TEST_DB_NAME'"
 fi
+
+log_msg "Training"
+./$CAFFE_TOOLS/caffe train -solver data/kdef/solver.prototxt \
+2>&1 | tee data/kdef/output.txt
