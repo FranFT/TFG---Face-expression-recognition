@@ -14,7 +14,7 @@ layer {
   }
   data_param {
     source: "data/kdef/kdef_training_lmdb"
-    batch_size: 16
+    batch_size: 128
     backend: LMDB
   }
 }
@@ -33,7 +33,7 @@ layer {
   }
   data_param {
     source: "data/kdef/kdef_test_lmdb"
-    batch_size: 16
+    batch_size: 128
     backend: LMDB
   }
 }

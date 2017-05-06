@@ -5,6 +5,12 @@ TRAINING_DB_NAME="kdef_training_lmdb"
 TEST_DB_NAME="kdef_test_lmdb"
 
 ############################### Script #########################################
+if [ "$1" == "-f" ] || [ "$1" == "--force" ];then
+  log_msg "Cleaning"
+  rm -r data-preprocessing/build/*
+  rm -r data/kdef/*
+fi
+
 log_msg "Preprocessing images"
 cd $PREPROC_DIR && ./run.sh $1
 
@@ -21,6 +27,7 @@ else
   echoG "Data Base being used:"
   echoG "------ '../data/kdef/$TRAINING_DB_NAME'"
   echoG "------ '../data/kdef/$TEST_DB_NAME'"
+  cd ..
 fi
 
 log_msg "Training"
