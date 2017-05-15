@@ -8,6 +8,7 @@ TEST_DB_NAME="kdef_test_lmdb"
 if [ "$1" == "-f" ] || [ "$1" == "--force" ];then
   log_msg "Cleaning"
   rm -r data-preprocessing/build/*
+  rmdir data-preprocessing/build
   rm -r data/kdef/*
 fi
 

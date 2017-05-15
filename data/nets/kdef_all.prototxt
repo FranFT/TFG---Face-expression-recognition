@@ -7,14 +7,9 @@ layer {
   include {
     phase: TRAIN
   }
-  transform_param {
-    mirror: true
-    crop_size: 100
-    mean_file: "data/kdef/mean.binaryproto"
-  }
   data_param {
     source: "data/kdef/kdef_training_lmdb"
-    batch_size: 128
+    batch_size: 256
     backend: LMDB
   }
 }
@@ -26,14 +21,9 @@ layer {
   include {
     phase: TEST
   }
-  transform_param {
-    mirror: false
-    crop_size: 100
-    mean_file: "data/kdef/mean.binaryproto"
-  }
   data_param {
     source: "data/kdef/kdef_test_lmdb"
-    batch_size: 128
+    batch_size: 64
     backend: LMDB
   }
 }
@@ -55,7 +45,7 @@ layer {
     kernel_size: 11
     stride: 2
     weight_filler {
-      type: "gaussian"
+      type: "xavier"
       std: 0.01
     }
     bias_filler {
@@ -111,7 +101,7 @@ layer {
     kernel_size: 5
     group: 2
     weight_filler {
-      type: "gaussian"
+      type: "xavier"
       std: 0.01
     }
     bias_filler {
@@ -166,7 +156,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "gaussian"
+      type: "xavier"
       std: 0.01
     }
     bias_filler {
@@ -200,7 +190,7 @@ layer {
     kernel_size: 3
     group: 2
     weight_filler {
-      type: "gaussian"
+      type: "xavier"
       std: 0.01
     }
     bias_filler {
@@ -242,7 +232,7 @@ layer {
   inner_product_param {
     num_output: 7
     weight_filler {
-      type: "gaussian"
+      type: "xavier"
       std: 0.005
     }
     bias_filler {
