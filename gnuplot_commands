@@ -1,0 +1,7 @@
+# gnuplot_commands
+set datafile separator ','
+set term x11 0
+plot 'output.txt.train' using 1:4  with line,\
+     'output.txt.test' using 1:5 with line
+set term x11 1
+plot 'output.txt.test' using 1:4 with line
