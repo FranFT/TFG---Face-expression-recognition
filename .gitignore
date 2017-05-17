@@ -3,6 +3,7 @@
 ##########################
 
 # Directorios
+data/history
 data/nets/output
 data/kdef/
 res/yalefaces
