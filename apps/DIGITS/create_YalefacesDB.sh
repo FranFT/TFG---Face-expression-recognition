@@ -4,8 +4,6 @@ source configuration.sh
 EXPR=(centerlight glasses happy leftlight noglasses normal rightlight sad sleepy surprised wink)
 DB_DIR=yalefaces
 
-rm -r ~/DIGITS/datasets/$DB_DIR
-
 if [ -d ~/DIGITS/datasets/$DB_DIR ]; then
   exit 1
 fi
